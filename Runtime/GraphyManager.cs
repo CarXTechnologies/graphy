@@ -252,6 +252,7 @@ namespace Tayx.Graphy
 
         private                     G_FpsMonitor            m_fpsMonitor                        = null;
         private                     G_RamMonitor            m_ramMonitor                        = null;
+		private                     G_DevMonitor            m_devMonitor                        = null;
         private                     G_AudioMonitor          m_audioMonitor                      = null;
 
         private                     int            m_modulePresetIndex                 = 0;
@@ -618,6 +619,7 @@ namespace Tayx.Graphy
             
             m_fpsMonitor    = GetComponentInChildren(typeof(G_FpsMonitor),    true) as G_FpsMonitor;
             m_ramMonitor    = GetComponentInChildren(typeof(G_RamMonitor),    true) as G_RamMonitor;
+			m_devMonitor    = GetComponentInChildren(typeof(G_DevMonitor),    true) as G_DevMonitor;
             m_audioMonitor  = GetComponentInChildren(typeof(G_AudioMonitor),  true) as G_AudioMonitor;
             
             m_fpsManager    = GetComponentInChildren(typeof(G_FpsManager),    true) as G_FpsManager;
