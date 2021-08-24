@@ -54,11 +54,11 @@ namespace Tayx.Graphy
 
         public enum ModuleState
         {
-            FULL            = 0,
-            TEXT            = 1,
-            BASIC           = 2,
-            BACKGROUND      = 3,
-            OFF             = 4
+            OFF             = 0,
+            FULL            = 1,
+            TEXT            = 2,
+            BASIC           = 3,
+            BACKGROUND      = 4
         }
 
         public enum ModulePosition
@@ -77,34 +77,38 @@ namespace Tayx.Graphy
             NEVER
         }
 
-		[Flags]
-		public enum ModuleStateFlags
+		internal enum Shift : int
 		{
-			FPS_SHIFT = 0,
-			FPS_BASIC = ModuleState.BASIC << FPS_SHIFT,
-			FPS_TEXT = ModuleState.TEXT << FPS_SHIFT,
-			FPS_FULL = ModuleState.FULL << FPS_SHIFT,
-
-			RAM_SHIFT = 2,
-			RAM_TEXT = ModuleState.TEXT << RAM_SHIFT,
-			RAM_FULL = ModuleState.FULL << RAM_SHIFT,
-
-			// 2 bits
-			DEV_SHIFT = 4,
-			DEV_TEXT = ModuleState.TEXT << DEV_SHIFT,
-			DEV_FULL = ModuleState.FULL << DEV_SHIFT,
-
-			// 2 bits
-			AUDIO_SHIFT = 6,
-			AUDIO_TEXT = ModuleState.TEXT << AUDIO_SHIFT,
-			AUDIO_FULL = ModuleState.FULL << AUDIO_SHIFT,
-
-			// 2 bits
-			ADVANCED_SHIFT = 8,
-			ADVANCED_FULL = ModuleState.FULL << ADVANCED_SHIFT,
+			FPS             = 0,
+            RAM             = 2,
+			DEV             = 4,
+            AUDIO           = 6,
+			ADVANCED = 8,
 		}
 
-		public ModuleStateFlags[] modulePresets = new ModuleStateFlags[]
+		[Flags]
+		public enum ModuleStateFlags : int
+		{
+			FPS_BASIC = ModuleState.BASIC << Shift.FPS,
+			FPS_TEXT = ModuleState.TEXT << Shift.FPS,
+			FPS_FULL = ModuleState.FULL << Shift.FPS,
+
+			RAM_TEXT = ModuleState.TEXT << Shift.RAM,
+			RAM_FULL = ModuleState.FULL << Shift.RAM,
+
+			// 2 bits
+			DEV_TEXT = ModuleState.TEXT << Shift.DEV,
+			DEV_FULL = ModuleState.FULL << Shift.DEV,
+
+			// 2 bits
+			AUDIO_TEXT = ModuleState.TEXT << Shift.AUDIO,
+			AUDIO_FULL = ModuleState.FULL << Shift.AUDIO,
+
+			// 2 bits
+			ADVANCED_FULL = ModuleState.FULL << Shift.ADVANCED,
+		}
+
+		private ModuleStateFlags[] m_modulePresets = new ModuleStateFlags[]
 		{
 			ModuleStateFlags.FPS_BASIC,
 			ModuleStateFlags.FPS_TEXT,
@@ -535,28 +539,26 @@ namespace Tayx.Graphy
         public void ToggleModes()
         {
 			m_modulePresetIndex++;
-			if (m_modulePresetIndex >= modulePresets.Length)
+			if (m_modulePresetIndex >= m_modulePresets.Length)
             {
                 m_modulePresetIndex = 0;
             }
 
-            SetPreset(modulePresets[m_modulePresetIndex]);
+            SetPreset(m_modulePresets[m_modulePresetIndex]);
         }
 
-		private ModuleState GetStateFromPreset(ModuleStateFlags preset, ModuleStateFlags shift)
+		private ModuleState GetStateFromPreset(ModuleStateFlags preset, Shift shift)
 		{
-			return (ModuleState)((int)preset >> (int)shift);
+			return (ModuleState)(((int)preset >> (int)shift) & 3);
 		}
 
 		public void SetPreset(ModuleStateFlags modulePreset)
 		{
-			ModuleState state = GetStateFromPreset(modulePreset, ModuleStateFlags.ADVANCED_SHIFT);
-
-			m_fpsManager.SetState(GetStateFromPreset(modulePreset, ModuleStateFlags.FPS_SHIFT));
-			m_ramManager.SetState(GetStateFromPreset(modulePreset, ModuleStateFlags.RAM_SHIFT));
-			m_devManager.SetState(GetStateFromPreset(modulePreset, ModuleStateFlags.DEV_SHIFT));
-			m_audioManager.SetState(GetStateFromPreset(modulePreset, ModuleStateFlags.AUDIO_SHIFT));
-			m_advancedData.SetState(GetStateFromPreset(modulePreset, ModuleStateFlags.ADVANCED_SHIFT));
+			m_fpsManager.SetState(GetStateFromPreset(modulePreset, Shift.FPS));
+			m_ramManager.SetState(GetStateFromPreset(modulePreset, Shift.RAM));
+			m_devManager.SetState(GetStateFromPreset(modulePreset, Shift.DEV));
+			m_audioManager.SetState(GetStateFromPreset(modulePreset, Shift.AUDIO));
+			m_advancedData.SetState(GetStateFromPreset(modulePreset, Shift.ADVANCED));
         }
 
 		public void ToggleActive()

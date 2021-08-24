@@ -103,6 +103,22 @@ namespace Tayx.Graphy
 
         #endregion
 
+        #region Section -> DEV
+
+        private bool m_devModuleInspectorToggle = true;
+
+        private SerializedProperty m_devModuleState;
+
+        private SerializedProperty m_allocatedDevColor;
+        private SerializedProperty m_reservedDevColor;
+        private SerializedProperty m_monoDevColor;
+
+        private SerializedProperty m_devGraphResolution;
+
+        private SerializedProperty m_devTextUpdateRate;
+
+        #endregion
+
         #region Section -> Audio
 
         private bool m_audioModuleInspectorToggle = true;
@@ -201,6 +217,20 @@ namespace Tayx.Graphy
             m_ramGraphResolution = serObj.FindProperty("m_ramGraphResolution");
 
             m_ramTextUpdateRate = serObj.FindProperty("m_ramTextUpdateRate");
+
+            #endregion
+
+            #region Section -> DEV
+
+            m_devModuleState = serObj.FindProperty("m_devModuleState");
+
+            m_allocatedDevColor = serObj.FindProperty("m_allocatedDevColor");
+            m_reservedDevColor = serObj.FindProperty("m_reservedDevColor");
+            m_monoDevColor = serObj.FindProperty("m_monoDevColor");
+
+            m_devGraphResolution = serObj.FindProperty("m_devGraphResolution");
+
+            m_devTextUpdateRate = serObj.FindProperty("m_devTextUpdateRate");
 
             #endregion
 
@@ -656,6 +686,86 @@ namespace Tayx.Graphy
                         tooltip: "Defines the amount times the text is updated in 1 second."
                     ),
                     m_ramTextUpdateRate.intValue,
+                    leftValue: 1,
+                    rightValue: 60
+                );
+            }
+
+            #endregion
+
+            GUILayout.Space(20);
+
+			#region Section -> DEV
+
+            m_devModuleInspectorToggle = EditorGUILayout.Foldout
+            (
+                m_devModuleInspectorToggle,
+                content: " [ DEV ]",
+                style: GraphyEditorStyle.FoldoutStyle
+            );
+
+            GUILayout.Space(5);
+
+            if (m_devModuleInspectorToggle)
+            {
+                EditorGUILayout.PropertyField
+                (
+                    m_ramModuleState,
+                    new GUIContent
+                    (
+                        text: "Module state",
+                        tooltip: "FULL -> Text + Graph \nTEXT -> Just text \nOFF -> Turned off"
+                    )
+                );
+
+                GUILayout.Space(5);
+
+                EditorGUILayout.LabelField("Graph colors:");
+
+                EditorGUI.indentLevel++;
+
+                m_allocatedDevColor.colorValue = EditorGUILayout.ColorField
+                (
+                    label: "- Allocated",
+                    value: m_allocatedDevColor.colorValue
+                );
+
+                m_reservedDevColor.colorValue = EditorGUILayout.ColorField
+                (
+                    label: "- Reserved",
+                    value: m_reservedDevColor.colorValue
+                );
+
+                m_monoDevColor.colorValue = EditorGUILayout.ColorField
+                (
+                    label: "- Mono",
+                    value: m_monoDevColor.colorValue
+                );
+
+                EditorGUI.indentLevel--;
+
+                if (m_devModuleState.intValue == 0)
+                {
+                    m_devGraphResolution.intValue = EditorGUILayout.IntSlider(
+                        new GUIContent
+                        (
+                            text: "Graph resolution",
+                            tooltip: "Defines the amount of points are in the graph"
+                        ),
+                        m_devGraphResolution.intValue,
+                        leftValue: 20,
+                        rightValue: m_graphyMode.intValue == 0 ? 300 : 128
+                    );
+                }
+
+                m_devTextUpdateRate.intValue = EditorGUILayout.IntSlider
+                (
+                    new GUIContent
+                    (
+                        text: "Text update rate",
+                        tooltip: "Defines the amount times the text is updated in 1 second."
+                    ),
+                    m_devTextUpdateRate.intValue,
                     leftValue: 1,
                     rightValue: 60
                 );
