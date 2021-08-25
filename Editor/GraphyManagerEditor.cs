@@ -710,7 +710,7 @@ namespace Tayx.Graphy
             {
                 EditorGUILayout.PropertyField
                 (
-                    m_ramModuleState,
+                    m_devModuleState,
                     new GUIContent
                     (
                         text: "Module state",
