@@ -196,21 +196,21 @@ namespace Tayx.Graphy.Dev
 
 			// Colors
 
-			m_shaderGraphAllocated.GoodColor = m_graphyManager.AllocatedDevColor;
-			m_shaderGraphAllocated.CautionColor = m_graphyManager.AllocatedDevColor;
-			m_shaderGraphAllocated.CriticalColor = m_graphyManager.AllocatedDevColor;
+			m_shaderGraphAllocated.GoodColor = m_graphyManager.AllocationDevColor;
+			m_shaderGraphAllocated.CautionColor = m_graphyManager.AllocationDevColor;
+			m_shaderGraphAllocated.CriticalColor = m_graphyManager.AllocationDevColor;
             
             m_shaderGraphAllocated.UpdateColors();
 
-			m_shaderGraphReserved.GoodColor = m_graphyManager.ReservedDevColor;
-			m_shaderGraphReserved.CautionColor = m_graphyManager.ReservedDevColor;
-			m_shaderGraphReserved.CriticalColor = m_graphyManager.ReservedDevColor;
+			m_shaderGraphReserved.GoodColor = m_graphyManager.VideoDevColor;
+			m_shaderGraphReserved.CautionColor = m_graphyManager.VideoDevColor;
+			m_shaderGraphReserved.CriticalColor = m_graphyManager.VideoDevColor;
             
             m_shaderGraphReserved.UpdateColors();
 
-			m_shaderGraphMono.GoodColor = m_graphyManager.MonoDevColor;
-			m_shaderGraphMono.CautionColor = m_graphyManager.MonoDevColor;
-			m_shaderGraphMono.CriticalColor = m_graphyManager.MonoDevColor;
+			m_shaderGraphMono.GoodColor = m_graphyManager.TexturesDevColor;
+			m_shaderGraphMono.CautionColor = m_graphyManager.TexturesDevColor;
+			m_shaderGraphMono.CriticalColor = m_graphyManager.TexturesDevColor;
             
             m_shaderGraphMono.UpdateColors();
 

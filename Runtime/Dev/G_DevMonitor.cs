@@ -24,7 +24,7 @@ namespace Tayx.Graphy.Dev
     {
 		#region Properties -> Public
 
-		// OLD
+		// TODO: delete this old parameters
 		public float AllocatedDev { get; private set; }
 		public float ReservedDev { get; private set; }
 		public float MonoDev { get; private set; }

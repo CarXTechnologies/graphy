@@ -202,9 +202,13 @@ namespace Tayx.Graphy
 
 		[SerializeField] private ModuleState m_devModuleState = ModuleState.FULL;
 
-		[SerializeField] private Color m_allocatedDevColor = new Color32(255, 190, 60, 255);
-		[SerializeField] private Color m_reservedDevColor = new Color32(205, 84, 229, 255);
-		[SerializeField] private Color m_monoDevColor = new Color(0.3f, 0.65f, 1f, 1);
+		[SerializeField] private Color m_allocationDevColor = new Color32(255, 190, 60, 255);
+		[SerializeField] private Color m_videoDevColor = new Color32(205, 84, 229, 255);
+		[SerializeField] private Color m_texturesDevColor = new Color(1f, 0.65f, 1f, 1);
+		[SerializeField] private Color m_meshesDevColor = new Color(0.35f, 0.6f, 1f, 1);
+		[SerializeField] private Color m_materialsDevColor = new Color(0.63f, 0.25f, 0.1f, 1);
+		[SerializeField] private Color m_assetsDevColor = new Color(0.23f, 0.5f, 1f, 1);
+		[SerializeField] private Color m_objectsDevColor = new Color(0.63f, 0.3f, 0.1f, 1);
 
 		[Range(10, 300)]
 		[SerializeField] private int m_devGraphResolution = 150;
@@ -361,20 +365,44 @@ namespace Tayx.Graphy
 		}
 
 
-		public Color AllocatedDevColor
+		public Color AllocationDevColor
 		{
-			get { return m_allocatedDevColor; }
-			set { m_allocatedDevColor = value; m_devManager.UpdateParameters(); }
+			get { return m_allocationDevColor; }
+			set { m_allocationDevColor = value; m_devManager.UpdateParameters(); }
 		}
-		public Color ReservedDevColor
+		public Color VideoDevColor
 		{
-			get { return m_reservedDevColor; }
-			set { m_reservedDevColor = value; m_devManager.UpdateParameters(); }
+			get { return m_videoDevColor; }
+			set { m_videoDevColor = value; m_devManager.UpdateParameters(); }
 		}
-		public Color MonoDevColor
+		public Color TexturesDevColor
 		{
-			get { return m_monoDevColor; }
-			set { m_monoDevColor = value; m_devManager.UpdateParameters(); }
+			get { return m_texturesDevColor; }
+			set { m_texturesDevColor = value; m_devManager.UpdateParameters(); }
+		}
+
+		public Color MeshesDevColor
+		{
+			get { return m_meshesDevColor; }
+			set { m_meshesDevColor = value; m_devManager.UpdateParameters(); }
+		}
+
+		public Color MaterialsDevColor
+		{
+			get { return m_materialsDevColor; }
+			set { m_materialsDevColor = value; m_devManager.UpdateParameters(); }
+		}
+
+		public Color AssetsDevColor
+		{
+			get { return m_assetsDevColor; }
+			set { m_assetsDevColor = value; m_devManager.UpdateParameters(); }
+		}
+
+		public Color ObjectsDevColor
+		{
+			get { return m_objectsDevColor; }
+			set { m_texturesDevColor = value; m_devManager.UpdateParameters(); }
 		}
 
 		public int DevGraphResolution

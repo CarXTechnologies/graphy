@@ -109,9 +109,13 @@ namespace Tayx.Graphy
 
         private SerializedProperty m_devModuleState;
 
-        private SerializedProperty m_allocatedDevColor;
-        private SerializedProperty m_reservedDevColor;
-        private SerializedProperty m_monoDevColor;
+        private SerializedProperty m_allocationDevColor;
+		private SerializedProperty m_videoDevColor;
+		private SerializedProperty m_texturesDevColor;
+		private SerializedProperty m_meshesDevColor;
+		private SerializedProperty m_materialsDevColor;
+		private SerializedProperty m_assetsDevColor;
+		private SerializedProperty m_objectsDevColor;
 
         private SerializedProperty m_devGraphResolution;
 
@@ -224,9 +228,13 @@ namespace Tayx.Graphy
 
             m_devModuleState = serObj.FindProperty("m_devModuleState");
 
-            m_allocatedDevColor = serObj.FindProperty("m_allocatedDevColor");
-            m_reservedDevColor = serObj.FindProperty("m_reservedDevColor");
-            m_monoDevColor = serObj.FindProperty("m_monoDevColor");
+            m_allocationDevColor = serObj.FindProperty("m_allocationDevColor");
+            m_videoDevColor = serObj.FindProperty("m_videoDevColor");
+            m_texturesDevColor = serObj.FindProperty("m_texturesDevColor");
+            m_meshesDevColor = serObj.FindProperty("m_meshesDevColor");
+            m_materialsDevColor = serObj.FindProperty("m_materialsDevColor");
+            m_assetsDevColor = serObj.FindProperty("m_assetsDevColor");
+            m_objectsDevColor = serObj.FindProperty("m_objectsDevColor");
 
             m_devGraphResolution = serObj.FindProperty("m_devGraphResolution");
 
@@ -720,27 +728,17 @@ namespace Tayx.Graphy
 
                 GUILayout.Space(5);
 
-                EditorGUILayout.LabelField("Graph colors:");
+                EditorGUILayout.LabelField("Сolors:");
 
                 EditorGUI.indentLevel++;
 
-                m_allocatedDevColor.colorValue = EditorGUILayout.ColorField
-                (
-                    label: "- Allocated",
-                    value: m_allocatedDevColor.colorValue
-                );
-
-                m_reservedDevColor.colorValue = EditorGUILayout.ColorField
-                (
-                    label: "- Reserved",
-                    value: m_reservedDevColor.colorValue
-                );
-
-                m_monoDevColor.colorValue = EditorGUILayout.ColorField
-                (
-                    label: "- Mono",
-                    value: m_monoDevColor.colorValue
-                );
+				DrawColor(m_allocationDevColor, "- AllocCount");
+				DrawColor(m_videoDevColor, "- Video");
+				DrawColor(m_texturesDevColor, "- Textures");
+				DrawColor(m_meshesDevColor, "- Meshes");
+				DrawColor(m_materialsDevColor, "- Materials");
+				DrawColor(m_assetsDevColor, "- Assets");
+				DrawColor(m_objectsDevColor, "- Objects");
 
                 EditorGUI.indentLevel--;
 
@@ -940,10 +938,19 @@ namespace Tayx.Graphy
             serializedObject.ApplyModifiedProperties();
         }
 
-        #endregion
+		private void DrawColor(SerializedProperty colorProperty, string label)
+		{
+				colorProperty.colorValue = EditorGUILayout.ColorField
+                (
+                    label: label,
+                    value: colorProperty.colorValue
+                );
+		}
 
-        #region Methods -> Private
+		#endregion
 
-        #endregion
-    }
+		#region Methods -> Private
+
+		#endregion
+	}
 }

@@ -90,10 +90,18 @@ namespace Tayx.Graphy.Dev
         #region Methods -> Public
         
         public void UpdateParameters()
-        {
-			// m_allocatedSystemMemorySizeText.color = m_graphyManager.AllocatedDevColor;
-			// m_reservedSystemMemorySizeText.color = m_graphyManager.ReservedDevColor;
-			// m_monoSystemMemorySizeText.color = m_graphyManager.MonoDevColor;
+		{
+			m_allocsCountText.color = m_graphyManager.AllocationDevColor;
+			m_allocsMemoryText.color = m_graphyManager.AllocationDevColor;
+			m_videoMemoryText.color = m_graphyManager.VideoDevColor;
+			m_texturesCountText.color = m_graphyManager.TexturesDevColor;
+			m_texturesMemoryText.color = m_graphyManager.TexturesDevColor;
+			m_meshesCountText.color = m_graphyManager.MeshesDevColor;
+			m_meshesMemoryText.color = m_graphyManager.MeshesDevColor;
+			m_materialsCountText.color = m_graphyManager.MaterialsDevColor;
+			m_materialsMemoryText.color = m_graphyManager.MaterialsDevColor;
+			m_assetsCountText.color = m_graphyManager.AssetsDevColor;
+			m_objectsCountText.color = m_graphyManager.ObjectsDevColor;
 
 			m_updateRate = m_graphyManager.DevTextUpdateRate;
         }
