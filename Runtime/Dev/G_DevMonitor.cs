@@ -29,17 +29,17 @@ namespace Tayx.Graphy.Dev
 		public float ReservedDev { get; private set; }
 		public float MonoDev { get; private set; }
 
-		public long AllocatedInFrameMemory { get; private set; }
-		public long AllocatedInFrameCount { get; private set; }
-		public long TextureMemory { get; private set; }
-		public long TextureCount { get; private set; }
-		public long MeshMemory { get; private set; }
-		public long MeshCount { get; private set; }
-		public long MaterialMemory { get; private set; }
-		public long MaterialCount { get; private set; }
-		public long AssetCount { get; private set; }
-		public long TotalUnityObjectCount { get; private set; }
-		public long VideoMemory { get; private set; }
+		public int AllocatedInFrameMemory { get; private set; }
+		public int AllocatedInFrameCount { get; private set; }
+		public int TextureMemory { get; private set; }
+		public int TextureCount { get; private set; }
+		public int MeshMemory { get; private set; }
+		public int MeshCount { get; private set; }
+		public int MaterialMemory { get; private set; }
+		public int MaterialCount { get; private set; }
+		public int AssetsCount { get; private set; }
+		public int ObjectCount { get; private set; }
+		public int VideoMemory { get; private set; }
 
 		#endregion
 
@@ -52,7 +52,7 @@ namespace Tayx.Graphy.Dev
 		ProfilerRecorder m_materialMemoryRecorder;
 		ProfilerRecorder m_materialCountRecorder;
 		ProfilerRecorder m_assetCountRecorder;
-		ProfilerRecorder m_totalUnityObjectCountRecorder;
+		ProfilerRecorder m_objectCountRecorder;
 
 		private void OnEnable()
 		{
@@ -65,7 +65,7 @@ namespace Tayx.Graphy.Dev
 			m_materialMemoryRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "Material Memory");
 			m_materialCountRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "Material Count");
 			m_assetCountRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "Asset Count");
-			m_totalUnityObjectCountRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "Total Unity Object Count");
+			m_objectCountRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "Object Count");
 		}
 		
 		private void OnDisable()
@@ -79,7 +79,7 @@ namespace Tayx.Graphy.Dev
 			m_materialMemoryRecorder.Dispose();
 			m_materialCountRecorder.Dispose();
 			m_assetCountRecorder.Dispose();
-			m_totalUnityObjectCountRecorder.Dispose();
+			m_objectCountRecorder.Dispose();
 		}
 
         #region Methods -> Unity Callbacks
@@ -89,49 +89,49 @@ namespace Tayx.Graphy.Dev
 			// NEW
 			if (m_allocInFrameMemoryRecorder.Valid)
 			{
-				AllocatedInFrameMemory = m_allocInFrameMemoryRecorder.LastValue;
+				AllocatedInFrameMemory = (int)m_allocInFrameMemoryRecorder.LastValue;
 			}
 			if (m_allocInFrameCountRecorder.Valid)
 			{
-				AllocatedInFrameCount = m_allocInFrameCountRecorder.LastValue;
+				AllocatedInFrameCount = (int)m_allocInFrameCountRecorder.LastValue;
 			}
 			if (m_textureMemoryRecorder.Valid)
 			{
-				TextureMemory = m_textureMemoryRecorder.LastValue;
+				TextureMemory = (int)m_textureMemoryRecorder.LastValue;
 			}
 			if (m_textureCountRecorder.Valid)
 			{
-				TextureCount = m_textureCountRecorder.LastValue;
+				TextureCount = (int)m_textureCountRecorder.LastValue;
 			}
 			if (m_meshMemoryRecorder.Valid)
 			{
-				MeshMemory = m_meshMemoryRecorder.LastValue;
+				MeshMemory = (int)m_meshMemoryRecorder.LastValue;
 			}
 			if (m_meshCountRecorder.Valid)
 			{
-				MeshCount = m_meshCountRecorder.LastValue;
+				MeshCount = (int)m_meshCountRecorder.LastValue;
 			}
 			if (m_materialMemoryRecorder.Valid)
 			{
-				MaterialMemory = m_materialMemoryRecorder.LastValue;
+				MaterialMemory = (int)m_materialMemoryRecorder.LastValue;
 			}
 			if (m_materialCountRecorder.Valid)
 			{
-				MaterialCount = m_materialCountRecorder.LastValue;
+				MaterialCount = (int)m_materialCountRecorder.LastValue;
 			}
 			if (m_assetCountRecorder.Valid)
 			{
-				AssetCount = m_assetCountRecorder.LastValue;
+				AssetsCount = (int)m_assetCountRecorder.LastValue;
 			}
-			if (m_totalUnityObjectCountRecorder.Valid)
+			if (m_objectCountRecorder.Valid)
 			{
-				TotalUnityObjectCount = m_totalUnityObjectCountRecorder.LastValue;
+				ObjectCount = (int)m_objectCountRecorder.LastValue;
 			}
 
-			VideoMemory = Profiler.GetAllocatedMemoryForGraphicsDriver();
+			VideoMemory = (int)Profiler.GetAllocatedMemoryForGraphicsDriver();
 
 			// TEMP - for debug
-			AllocatedDev = AssetCount;
+			AllocatedDev = AssetsCount;
 			ReservedDev = TextureMemory;
 			MonoDev = AllocatedInFrameCount;
         }

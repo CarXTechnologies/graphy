@@ -390,10 +390,11 @@ namespace Tayx.Graphy
 		}
 
 		// Getters
+		//TODO: upadte getters for dev monitor
 
-		public float AllocatedDev { get { return m_devMonitor.AllocatedDev; } }
-		public float ReservedDev { get { return m_devMonitor.ReservedDev; } }
-		public float MonoDev { get { return m_devMonitor.MonoDev; } }
+		// public float AllocatedDev { get { return m_devMonitor.AllocatedDev; } }
+		// public float ReservedDev { get { return m_devMonitor.ReservedDev; } }
+		// public float MonoDev { get { return m_devMonitor.MonoDev; } }
 
 		// Audio -------------------------------------------------------------------------
 

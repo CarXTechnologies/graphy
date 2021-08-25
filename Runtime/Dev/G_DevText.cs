@@ -21,9 +21,17 @@ namespace Tayx.Graphy.Dev
     {
         #region Variables -> Serialized Private
 
-        [SerializeField] private    Text            m_allocatedSystemMemorySizeText         = null;
-        [SerializeField] private    Text            m_reservedSystemMemorySizeText          = null;
-        [SerializeField] private    Text            m_monoSystemMemorySizeText              = null;
+		[SerializeField] private    Text            m_allocsCountText         = null;
+		[SerializeField] private    Text            m_allocsMemoryText         = null;
+		[SerializeField] private    Text            m_videoMemoryText         = null;
+		[SerializeField] private    Text            m_texturesCountText         = null;
+		[SerializeField] private    Text            m_texturesMemoryText         = null;
+		[SerializeField] private    Text            m_meshesCountText         = null;
+		[SerializeField] private    Text            m_meshesMemoryText         = null;
+		[SerializeField] private    Text            m_materialsCountText         = null;
+		[SerializeField] private    Text            m_materialsMemoryText         = null;
+		[SerializeField] private    Text            m_assetsCountText         = null;
+		[SerializeField] private    Text            m_objectsCountText         = null;
 
         #endregion
 
@@ -46,18 +54,34 @@ namespace Tayx.Graphy.Dev
             Init();
         }
 
-        private void Update()
+		private const int BytesInMB = 1024 * 1024;
+		private const int BytesInKB = 1024;
+
+		private void Update()
         {
             m_deltaTime += Time.unscaledDeltaTime;
 
             if (m_deltaTime > 1f / m_updateRate)
             {
-				// Update allocated, mono and reserved memory
-				m_allocatedSystemMemorySizeText.text = ((int)m_devMonitor.AllocatedDev).ToStringNonAlloc();
-				m_reservedSystemMemorySizeText.text = ((int)m_devMonitor.ReservedDev).ToStringNonAlloc();
-				m_monoSystemMemorySizeText.text = ((int)m_devMonitor.MonoDev).ToStringNonAlloc();
+				// update data
+				m_allocsCountText.text = m_devMonitor.AllocatedInFrameCount.ToStringNonAlloc();
+				m_allocsMemoryText.text = (m_devMonitor.AllocatedInFrameMemory / BytesInKB).ToStringNonAlloc();
 
-                m_deltaTime                     = 0f;
+				m_videoMemoryText.text = (m_devMonitor.VideoMemory/ BytesInMB).ToStringNonAlloc();
+
+				m_texturesCountText.text = m_devMonitor.TextureCount.ToStringNonAlloc();
+				m_texturesMemoryText.text = (m_devMonitor.TextureMemory / BytesInMB).ToStringNonAlloc();
+
+				m_meshesCountText.text = m_devMonitor.MeshCount.ToStringNonAlloc();
+				m_meshesMemoryText.text = (m_devMonitor.MeshMemory / BytesInMB).ToStringNonAlloc();
+
+				m_materialsCountText.text = m_devMonitor.MaterialCount.ToStringNonAlloc();
+				m_materialsMemoryText.text = (m_devMonitor.MaterialMemory / BytesInKB).ToStringNonAlloc();
+
+				m_assetsCountText.text = m_devMonitor.AssetsCount.ToStringNonAlloc();
+				m_objectsCountText.text = m_devMonitor.ObjectCount.ToStringNonAlloc();
+
+				m_deltaTime                     = 0f;
             }
         }
 
@@ -67,9 +91,9 @@ namespace Tayx.Graphy.Dev
         
         public void UpdateParameters()
         {
-			m_allocatedSystemMemorySizeText.color = m_graphyManager.AllocatedDevColor;
-			m_reservedSystemMemorySizeText.color = m_graphyManager.ReservedDevColor;
-			m_monoSystemMemorySizeText.color = m_graphyManager.MonoDevColor;
+			// m_allocatedSystemMemorySizeText.color = m_graphyManager.AllocatedDevColor;
+			// m_reservedSystemMemorySizeText.color = m_graphyManager.ReservedDevColor;
+			// m_monoSystemMemorySizeText.color = m_graphyManager.MonoDevColor;
 
 			m_updateRate = m_graphyManager.DevTextUpdateRate;
         }
