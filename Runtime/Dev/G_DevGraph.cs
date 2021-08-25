@@ -235,9 +235,8 @@ namespace Tayx.Graphy.Dev
             m_shaderGraphAllocs.Average           = m_devMonitor.AverageAllocs / m_highestAlloc;
             m_shaderGraphAllocs.UpdateAverage();
 
-			//TODO: сделать новые границы
-            m_shaderGraphAllocs.GoodThreshold     = (float)m_graphyManager.GoodFPSThreshold / m_highestAlloc;
-            m_shaderGraphAllocs.CautionThreshold  = (float)m_graphyManager.CautionFPSThreshold / m_highestAlloc;
+            m_shaderGraphAllocs.GoodThreshold     = (float)m_graphyManager.CautionAllocsThresholdKB / m_highestAlloc;
+            m_shaderGraphAllocs.CautionThreshold  = (float)m_graphyManager.GoodAllocsThresholdKB / m_highestAlloc;
             m_shaderGraphAllocs.UpdateThresholds();
 		}
 
@@ -286,10 +285,9 @@ namespace Tayx.Graphy.Dev
             
             m_shaderGraphMesh.UpdateColors();
 
-			// TODO: colors for m_shaderGraphAllocs
-			m_shaderGraphAllocs.GoodColor = m_graphyManager.MeshesDevColor;
-			m_shaderGraphAllocs.CautionColor = m_graphyManager.MeshesDevColor;
-			m_shaderGraphAllocs.CriticalColor = m_graphyManager.MeshesDevColor;
+			m_shaderGraphAllocs.GoodColor = m_graphyManager.CriticalAllocsColor;
+			m_shaderGraphAllocs.CautionColor = m_graphyManager.CautionAllocsColor;
+			m_shaderGraphAllocs.CriticalColor = m_graphyManager.GoodAllocsColor;
             
             m_shaderGraphAllocs.UpdateColors();
 

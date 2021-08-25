@@ -65,7 +65,9 @@ namespace Tayx.Graphy.Dev
             {
 				// update data
 				m_allocsCountText.text = m_devMonitor.AllocatedInFrameCount.ToStringNonAlloc();
-				m_allocsMemoryText.text = (m_devMonitor.AllocatedInFrameMemory / BytesInKB).ToStringNonAlloc();
+				int allocsKB = m_devMonitor.AllocatedInFrameMemory / BytesInKB;
+				m_allocsMemoryText.text = (allocsKB).ToStringNonAlloc();
+				m_allocsMemoryText.color = m_graphyManager.GetAllocaRelatedColor(allocsKB);
 
 				m_videoMemoryText.text = (m_devMonitor.VideoMemory/ BytesInMB).ToStringNonAlloc();
 
@@ -92,7 +94,6 @@ namespace Tayx.Graphy.Dev
         public void UpdateParameters()
 		{
 			m_allocsCountText.color = m_graphyManager.AllocationDevColor;
-			m_allocsMemoryText.color = m_graphyManager.AllocationDevColor;
 			m_videoMemoryText.color = m_graphyManager.VideoDevColor;
 			m_texturesCountText.color = m_graphyManager.TexturesDevColor;
 			m_texturesMemoryText.color = m_graphyManager.TexturesDevColor;

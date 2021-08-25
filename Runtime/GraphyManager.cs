@@ -210,6 +210,15 @@ namespace Tayx.Graphy
 		[SerializeField] private Color m_assetsDevColor = new Color(0.23f, 0.5f, 1f, 1);
 		[SerializeField] private Color m_objectsDevColor = new Color(0.63f, 0.3f, 0.1f, 1);
 
+        [SerializeField] private    Color                   m_goodAllocsColor                      = new Color32(118, 212, 58, 255);
+        [SerializeField] private    int                     m_goodAllocsThresholdKB                  = 5;
+
+        [SerializeField] private    Color                   m_cautionAllocsColor                   = new Color32(243, 232, 0, 255);
+        [SerializeField] private    int                     m_cautionAllocsThresholdKB               = 30;
+
+        [SerializeField] private    Color                   m_criticalAllocsColor                  = new Color32(220, 41, 30, 255);
+
+
 		[Range(10, 300)]
 		[SerializeField] private int m_devGraphResolution = 150;
 
@@ -417,6 +426,34 @@ namespace Tayx.Graphy
 			set { m_devTextUpdateRate = value; m_devManager.UpdateParameters(); }
 		}
 
+		public Color GoodAllocsColor
+		{
+			get { return m_goodAllocsColor; }
+			set { m_goodAllocsColor = value; m_fpsManager.UpdateParameters(); }
+		}
+		public Color CautionAllocsColor
+		{
+			get { return m_cautionAllocsColor; }
+			set { m_cautionAllocsColor = value; m_fpsManager.UpdateParameters(); }
+		}
+		public Color CriticalAllocsColor
+		{
+			get { return m_criticalAllocsColor; }
+			set { m_criticalAllocsColor = value; m_fpsManager.UpdateParameters(); }
+		}
+
+		public int GoodAllocsThresholdKB
+		{
+			get { return m_goodAllocsThresholdKB; }
+			set { m_goodAllocsThresholdKB = value; m_fpsManager.UpdateParameters(); }
+		}
+		public int CautionAllocsThresholdKB
+		{
+			get { return m_cautionAllocsThresholdKB; }
+			set { m_cautionAllocsThresholdKB = value; m_fpsManager.UpdateParameters(); }
+		}
+
+
 		// Getters
 		//TODO: upadte getters for dev monitor
 
@@ -515,6 +552,22 @@ namespace Tayx.Graphy
         #endregion
 
         #region Methods -> Public
+
+		public Color GetAllocaRelatedColor(int allocsKB)
+		{
+            if (allocsKB <= m_goodAllocsThresholdKB)
+            {
+                return m_goodAllocsColor;
+            }
+            else if (allocsKB <= m_cautionAllocsThresholdKB)
+            {
+                return m_cautionAllocsColor;
+            }
+            else
+            {
+                return m_criticalAllocsColor;
+            }
+		}
 
         public void SetModulePosition(ModuleType moduleType, ModulePosition modulePosition)
         {
