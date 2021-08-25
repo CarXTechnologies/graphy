@@ -99,7 +99,7 @@ namespace Tayx.Graphy.Fps
                 Init();
             }
             
-            short fps = (short)(1 / Time.unscaledDeltaTime);
+            short fps = m_fpsMonitor.CurrentFPS;
 
             int currentMaxFps = 0;
 

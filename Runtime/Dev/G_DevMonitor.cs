@@ -35,19 +35,30 @@ namespace Tayx.Graphy.Dev
 		public int AssetsCount { get; private set; }
 		public int ObjectCount { get; private set; }
 		public int VideoMemory { get; private set; }
+		public int AverageAllocs { get; private set; } = 0;
 
 		#endregion
 
-		ProfilerRecorder m_allocInFrameMemoryRecorder;
-		ProfilerRecorder m_allocInFrameCountRecorder;
-		ProfilerRecorder m_textureMemoryRecorder;
-		ProfilerRecorder m_textureCountRecorder;
-		ProfilerRecorder m_meshMemoryRecorder;
-		ProfilerRecorder m_meshCountRecorder;
-		ProfilerRecorder m_materialMemoryRecorder;
-		ProfilerRecorder m_materialCountRecorder;
-		ProfilerRecorder m_assetCountRecorder;
-		ProfilerRecorder m_objectCountRecorder;
+		private ProfilerRecorder m_allocInFrameMemoryRecorder;
+		private ProfilerRecorder m_allocInFrameCountRecorder;
+		private ProfilerRecorder m_textureMemoryRecorder;
+		private ProfilerRecorder m_textureCountRecorder;
+		private ProfilerRecorder m_meshMemoryRecorder;
+		private ProfilerRecorder m_meshCountRecorder;
+		private ProfilerRecorder m_materialMemoryRecorder;
+		private ProfilerRecorder m_materialCountRecorder;
+		private ProfilerRecorder m_assetCountRecorder;
+		private ProfilerRecorder m_objectCountRecorder;
+
+		private int[] m_allocsSamples;
+		private int m_allocsSamplesCapacity = 1024;
+		private int m_indexSample = 0;
+		private int m_allocsSamplesCount = 0;
+
+		private void Awake()
+		{
+			m_allocsSamples = new int[m_allocsSamplesCapacity];
+		}
 
 		private void OnEnable()
 		{
@@ -124,6 +135,27 @@ namespace Tayx.Graphy.Dev
 			}
 
 			VideoMemory = (int)Profiler.GetAllocatedMemoryForGraphicsDriver();
+
+
+			m_indexSample++;
+
+			int averageAllocs = 0;
+
+			if ( m_indexSample >= m_allocsSamplesCapacity ) m_indexSample = 0;
+
+            m_allocsSamples[ m_indexSample ] = AllocatedInFrameMemory;
+
+            if (m_allocsSamplesCount < m_allocsSamplesCapacity)
+            {
+                m_allocsSamplesCount++;
+            }
+
+            for (int i = 0; i < m_allocsSamplesCount; i++)
+            {
+                averageAllocs += m_allocsSamples[i];
+            }
+
+            AverageAllocs = (int)((float)averageAllocs / (float)m_allocsSamplesCount);
         }
 
         #endregion 
