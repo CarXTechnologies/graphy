@@ -100,7 +100,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c80e6d63202cef44ca3ffdaccec693be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modulePresets: 02000000010000000000000005000000040000000000000015000000140000001000000000000000450000004400000040000000000000000000000002000000
   m_graphyMode: 0
   m_enableOnStartup: 1
   m_keepAlive: 1
@@ -129,9 +128,13 @@ MonoBehaviour:
   m_ramGraphResolution: 150
   m_ramTextUpdateRate: 3
   m_devModuleState: 0
-  m_allocatedDevColor: {r: 1, g: 0.74509805, b: 0.23529412, a: 1}
-  m_reservedDevColor: {r: 0.8039216, g: 0.32941177, b: 0.8980392, a: 1}
-  m_monoDevColor: {r: 0.3, g: 0.65, b: 1, a: 1}
+  m_allocationDevColor: {r: 1, g: 0.74509805, b: 0.23529412, a: 1}
+  m_videoDevColor: {r: 0.8980392, g: 0.32941177, b: 0.36026022, a: 1}
+  m_texturesDevColor: {r: 1, g: 0.65, b: 1, a: 1}
+  m_meshesDevColor: {r: 0.35, g: 0.6, b: 1, a: 1}
+  m_materialsDevColor: {r: 0.63, g: 0.25, b: 0.1, a: 1}
+  m_assetsDevColor: {r: 0.23, g: 0.5, b: 1, a: 1}
+  m_objectsDevColor: {r: 0.63, g: 0.3, b: 0.1, a: 1}
   m_devGraphResolution: 150
   m_devTextUpdateRate: 3
   m_audioModuleState: 0

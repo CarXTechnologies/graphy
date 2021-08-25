@@ -24,11 +24,6 @@ namespace Tayx.Graphy.Dev
     {
 		#region Properties -> Public
 
-		// TODO: delete this old parameters
-		public float AllocatedDev { get; private set; }
-		public float ReservedDev { get; private set; }
-		public float MonoDev { get; private set; }
-
 		public int AllocatedInFrameMemory { get; private set; }
 		public int AllocatedInFrameCount { get; private set; }
 		public int TextureMemory { get; private set; }
@@ -129,11 +124,6 @@ namespace Tayx.Graphy.Dev
 			}
 
 			VideoMemory = (int)Profiler.GetAllocatedMemoryForGraphicsDriver();
-
-			// TEMP - for debug
-			AllocatedDev = AssetsCount;
-			ReservedDev = TextureMemory;
-			MonoDev = AllocatedInFrameCount;
         }
 
         #endregion 

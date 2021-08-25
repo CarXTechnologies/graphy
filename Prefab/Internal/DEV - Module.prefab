@@ -202,7 +202,7 @@ GameObject:
   - component: {fileID: 824167088385093845}
   - component: {fileID: 824167088393254745}
   m_Layer: 5
-  m_Name: ram_reserved_graph
+  m_Name: texture_graph
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -247,7 +247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 5ec99183bcca10249ac54cd6dcee6372, type: 2}
+  m_Material: {fileID: 2100000, guid: 3de45c76e9a8f664a8c0c2f48ec9667b, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -277,7 +277,7 @@ GameObject:
   - component: {fileID: 824167088385061191}
   - component: {fileID: 824167088393265111}
   m_Layer: 5
-  m_Name: ram_allocated_graph
+  m_Name: memory_graph
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -325,7 +325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 6b025b045db969e4988a6267cc04938d, type: 2}
+  m_Material: {fileID: 2100000, guid: 90128a3208fa22d4fa7a139a4eed6e67, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -550,9 +550,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa1b31829226d22408a622719ccfd4ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_imageAllocated: {fileID: 824167088393265111}
-  m_imageReserved: {fileID: 824167088393254745}
-  m_imageMono: {fileID: 824167088393249605}
+  m_imageVideo: {fileID: 824167088393265111}
+  m_imageTexture: {fileID: 824167088393254745}
+  m_imageMeshes: {fileID: 824167088393249605}
   ShaderFull: {fileID: 4800000, guid: bc65170c051b0724287a7f1636d87573, type: 3}
   ShaderLight: {fileID: 4800000, guid: 96316acf0f537ae449a9a641fa00eefe, type: 3}
   m_isInitialized: 0
@@ -663,7 +663,7 @@ GameObject:
   - component: {fileID: 824167088385059519}
   - component: {fileID: 824167088393249605}
   m_Layer: 5
-  m_Name: ram_mono_graph
+  m_Name: mesh_graph
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -708,7 +708,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: cb5c252f19f1cd2448f88d7f9dd989e8, type: 2}
+  m_Material: {fileID: 2100000, guid: 5058552d86620ca42856f4b874c00a3e, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}

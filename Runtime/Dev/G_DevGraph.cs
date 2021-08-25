@@ -25,9 +25,9 @@ namespace Tayx.Graphy.Dev
     {
         #region Variables -> Serialized Private
 
-        [SerializeField] private    Image           m_imageAllocated = null;
-        [SerializeField] private    Image           m_imageReserved = null;
-        [SerializeField] private    Image           m_imageMono = null;
+        [SerializeField] private    Image           m_imageVideo = null;
+        [SerializeField] private    Image           m_imageTexture = null;
+        [SerializeField] private    Image           m_imageMeshes = null;
 
         [SerializeField] private    Shader          ShaderFull = null;
         [SerializeField] private    Shader          ShaderLight = null;
@@ -44,13 +44,13 @@ namespace Tayx.Graphy.Dev
 
         private                     int             m_resolution                = 150;
 
-        private                     G_GraphShader   m_shaderGraphAllocated = null;
-        private                     G_GraphShader   m_shaderGraphReserved = null;
-        private                     G_GraphShader   m_shaderGraphMono = null;
+        private                     G_GraphShader   m_shaderGraphVideo = null;
+        private                     G_GraphShader   m_shaderGraphTexture = null;
+        private                     G_GraphShader   m_shaderGraphMesh = null;
 
-        private                     float[]         m_allocatedArray;
-        private                     float[]         m_reservedArray;
-        private                     float[]         m_monoArray;
+        private                     float[]         m_videoArray;
+        private                     float[]         m_textureArray;
+        private                     float[]         m_meshArray;
 
         private                     float           m_highestMemory = 0;
 
@@ -69,9 +69,9 @@ namespace Tayx.Graphy.Dev
 
         public void UpdateParameters()
         { 
-            if (    m_shaderGraphAllocated  == null
-                ||  m_shaderGraphReserved   == null
-                ||  m_shaderGraphMono       == null)
+            if (    m_shaderGraphVideo  == null
+                ||  m_shaderGraphTexture   == null
+                ||  m_shaderGraphMesh       == null)
             {
                 /*
                  * Note: this is fine, since we don't much
@@ -89,29 +89,29 @@ namespace Tayx.Graphy.Dev
             switch (m_graphyManager.GraphyMode)
             {
                 case GraphyManager.Mode.FULL:
-                    m_shaderGraphAllocated  .ArrayMaxSize = G_GraphShader.ArrayMaxSizeFull;
-                    m_shaderGraphReserved   .ArrayMaxSize = G_GraphShader.ArrayMaxSizeFull;
-                    m_shaderGraphMono       .ArrayMaxSize = G_GraphShader.ArrayMaxSizeFull;
+                    m_shaderGraphVideo  .ArrayMaxSize = G_GraphShader.ArrayMaxSizeFull;
+                    m_shaderGraphTexture   .ArrayMaxSize = G_GraphShader.ArrayMaxSizeFull;
+                    m_shaderGraphMesh       .ArrayMaxSize = G_GraphShader.ArrayMaxSizeFull;
 
-                    m_shaderGraphAllocated  .Image.material = new Material(ShaderFull);
-                    m_shaderGraphReserved   .Image.material = new Material(ShaderFull);
-                    m_shaderGraphMono       .Image.material = new Material(ShaderFull);
+                    m_shaderGraphVideo  .Image.material = new Material(ShaderFull);
+                    m_shaderGraphTexture   .Image.material = new Material(ShaderFull);
+                    m_shaderGraphMesh       .Image.material = new Material(ShaderFull);
                     break;
 
                 case GraphyManager.Mode.LIGHT:
-                    m_shaderGraphAllocated  .ArrayMaxSize = G_GraphShader.ArrayMaxSizeLight;
-                    m_shaderGraphReserved   .ArrayMaxSize = G_GraphShader.ArrayMaxSizeLight;
-                    m_shaderGraphMono       .ArrayMaxSize = G_GraphShader.ArrayMaxSizeLight;
+                    m_shaderGraphVideo  .ArrayMaxSize = G_GraphShader.ArrayMaxSizeLight;
+                    m_shaderGraphTexture   .ArrayMaxSize = G_GraphShader.ArrayMaxSizeLight;
+                    m_shaderGraphMesh       .ArrayMaxSize = G_GraphShader.ArrayMaxSizeLight;
 
-                    m_shaderGraphAllocated  .Image.material = new Material(ShaderLight);
-                    m_shaderGraphReserved   .Image.material = new Material(ShaderLight);
-                    m_shaderGraphMono       .Image.material = new Material(ShaderLight);
+                    m_shaderGraphVideo  .Image.material = new Material(ShaderLight);
+                    m_shaderGraphTexture   .Image.material = new Material(ShaderLight);
+                    m_shaderGraphMesh       .Image.material = new Material(ShaderLight);
                     break;
             }
 
-            m_shaderGraphAllocated.InitializeShader();
-            m_shaderGraphReserved.InitializeShader();
-            m_shaderGraphMono.InitializeShader();
+            m_shaderGraphVideo.InitializeShader();
+            m_shaderGraphTexture.InitializeShader();
+            m_shaderGraphMesh.InitializeShader();
 
 			m_resolution = m_graphyManager.DevGraphResolution;
             
@@ -131,9 +131,9 @@ namespace Tayx.Graphy.Dev
                 Init();
             }
 
-			float allocatedMemory = m_devMonitor.AllocatedDev;
-			float reservedMemory = m_devMonitor.ReservedDev;
-			float monoMemory = m_devMonitor.MonoDev;
+			float videoMemory = m_devMonitor.VideoMemory;
+			float textureMemory = m_devMonitor.TextureMemory;
+			float meshMemory = m_devMonitor.MeshMemory;
 
             m_highestMemory = 0;
 
@@ -141,106 +141,106 @@ namespace Tayx.Graphy.Dev
             {
                 if (i >= m_resolution - 1)
                 {
-                    m_allocatedArray[i] = allocatedMemory;
-                    m_reservedArray[i]  = reservedMemory;
-                    m_monoArray[i]      = monoMemory;
+                    m_videoArray[i] = videoMemory;
+                    m_textureArray[i]  = textureMemory;
+                    m_meshArray[i]      = meshMemory;
                 }
                 else
                 {
-                    m_allocatedArray[i] = m_allocatedArray[i + 1];
-                    m_reservedArray[i]  = m_reservedArray[i + 1];
-                    m_monoArray[i]      = m_monoArray[i + 1];
+                    m_videoArray[i] = m_videoArray[i + 1];
+                    m_textureArray[i]  = m_textureArray[i + 1];
+                    m_meshArray[i]      = m_meshArray[i + 1];
                 }
 
-                if (m_highestMemory < m_reservedArray[i])
+                if (m_highestMemory < m_textureArray[i])
                 {
-                    m_highestMemory = m_reservedArray[i];
+                    m_highestMemory = m_textureArray[i];
                 }
             }
 
             for (int i = 0; i <= m_resolution - 1; i++)
             {
-                m_shaderGraphAllocated.ShaderArrayValues[i] = m_allocatedArray[i] / m_highestMemory;
+                m_shaderGraphVideo.ShaderArrayValues[i] = m_videoArray[i] / m_highestMemory;
 
-                m_shaderGraphReserved.ShaderArrayValues[i]  = m_reservedArray[i] / m_highestMemory;
+                m_shaderGraphTexture.ShaderArrayValues[i]  = m_textureArray[i] / m_highestMemory;
 
-                m_shaderGraphMono.ShaderArrayValues[i]      = m_monoArray[i] / m_highestMemory;
+                m_shaderGraphMesh.ShaderArrayValues[i]      = m_meshArray[i] / m_highestMemory;
             }
 
-            m_shaderGraphAllocated.UpdatePoints();
-            m_shaderGraphReserved.UpdatePoints();
-            m_shaderGraphMono.UpdatePoints();
+            m_shaderGraphVideo.UpdatePoints();
+            m_shaderGraphTexture.UpdatePoints();
+            m_shaderGraphMesh.UpdatePoints();
         }
 
         protected override void CreatePoints()
         {
-            if (m_shaderGraphAllocated.ShaderArrayValues == null || m_shaderGraphAllocated.ShaderArrayValues.Length != m_resolution)
+            if (m_shaderGraphVideo.ShaderArrayValues == null || m_shaderGraphVideo.ShaderArrayValues.Length != m_resolution)
             {
-                m_allocatedArray                = new float[m_resolution];
-                m_reservedArray                 = new float[m_resolution];
-                m_monoArray                     = new float[m_resolution];
+                m_videoArray                = new float[m_resolution];
+                m_textureArray                 = new float[m_resolution];
+                m_meshArray                     = new float[m_resolution];
 
-                m_shaderGraphAllocated.ShaderArrayValues    = new float[m_resolution];
-                m_shaderGraphReserved.ShaderArrayValues     = new float[m_resolution];
-                m_shaderGraphMono.ShaderArrayValues         = new float[m_resolution];
+                m_shaderGraphVideo.ShaderArrayValues    = new float[m_resolution];
+                m_shaderGraphTexture.ShaderArrayValues     = new float[m_resolution];
+                m_shaderGraphMesh.ShaderArrayValues         = new float[m_resolution];
             }
 
             for (int i = 0; i < m_resolution; i++)
             {
-                m_shaderGraphAllocated.ShaderArrayValues[i] = 0;
-                m_shaderGraphReserved.ShaderArrayValues[i]  = 0;
-                m_shaderGraphMono.ShaderArrayValues[i]      = 0;
+                m_shaderGraphVideo.ShaderArrayValues[i] = 0;
+                m_shaderGraphTexture.ShaderArrayValues[i]  = 0;
+                m_shaderGraphMesh.ShaderArrayValues[i]      = 0;
             }
 
 			// Initialize the material values
 
 			// Colors
 
-			m_shaderGraphAllocated.GoodColor = m_graphyManager.AllocationDevColor;
-			m_shaderGraphAllocated.CautionColor = m_graphyManager.AllocationDevColor;
-			m_shaderGraphAllocated.CriticalColor = m_graphyManager.AllocationDevColor;
+			m_shaderGraphVideo.GoodColor = m_graphyManager.VideoDevColor;
+			m_shaderGraphVideo.CautionColor = m_graphyManager.VideoDevColor;
+			m_shaderGraphVideo.CriticalColor = m_graphyManager.VideoDevColor;
             
-            m_shaderGraphAllocated.UpdateColors();
+            m_shaderGraphVideo.UpdateColors();
 
-			m_shaderGraphReserved.GoodColor = m_graphyManager.VideoDevColor;
-			m_shaderGraphReserved.CautionColor = m_graphyManager.VideoDevColor;
-			m_shaderGraphReserved.CriticalColor = m_graphyManager.VideoDevColor;
+			m_shaderGraphTexture.GoodColor = m_graphyManager.TexturesDevColor;
+			m_shaderGraphTexture.CautionColor = m_graphyManager.TexturesDevColor;
+			m_shaderGraphTexture.CriticalColor = m_graphyManager.TexturesDevColor;
             
-            m_shaderGraphReserved.UpdateColors();
+            m_shaderGraphTexture.UpdateColors();
 
-			m_shaderGraphMono.GoodColor = m_graphyManager.TexturesDevColor;
-			m_shaderGraphMono.CautionColor = m_graphyManager.TexturesDevColor;
-			m_shaderGraphMono.CriticalColor = m_graphyManager.TexturesDevColor;
+			m_shaderGraphMesh.GoodColor = m_graphyManager.MeshesDevColor;
+			m_shaderGraphMesh.CautionColor = m_graphyManager.MeshesDevColor;
+			m_shaderGraphMesh.CriticalColor = m_graphyManager.MeshesDevColor;
             
-            m_shaderGraphMono.UpdateColors();
+            m_shaderGraphMesh.UpdateColors();
 
             // Thresholds
             
-            m_shaderGraphAllocated.GoodThreshold    = 0;
-            m_shaderGraphAllocated.CautionThreshold = 0;
-            m_shaderGraphAllocated.UpdateThresholds();
+            m_shaderGraphVideo.GoodThreshold    = 0;
+            m_shaderGraphVideo.CautionThreshold = 0;
+            m_shaderGraphVideo.UpdateThresholds();
             
-            m_shaderGraphReserved.GoodThreshold     = 0;
-            m_shaderGraphReserved.CautionThreshold  = 0;
-            m_shaderGraphReserved.UpdateThresholds();
+            m_shaderGraphTexture.GoodThreshold     = 0;
+            m_shaderGraphTexture.CautionThreshold  = 0;
+            m_shaderGraphTexture.UpdateThresholds();
             
-            m_shaderGraphMono.GoodThreshold         = 0;
-            m_shaderGraphMono.CautionThreshold      = 0;
-            m_shaderGraphMono.UpdateThresholds();
+            m_shaderGraphMesh.GoodThreshold         = 0;
+            m_shaderGraphMesh.CautionThreshold      = 0;
+            m_shaderGraphMesh.UpdateThresholds();
 
-            m_shaderGraphAllocated.UpdateArray();
-            m_shaderGraphReserved.UpdateArray();
-            m_shaderGraphMono.UpdateArray();
+            m_shaderGraphVideo.UpdateArray();
+            m_shaderGraphTexture.UpdateArray();
+            m_shaderGraphMesh.UpdateArray();
             
             // Average
             
-            m_shaderGraphAllocated.Average  = 0;
-            m_shaderGraphReserved.Average   = 0;
-            m_shaderGraphMono.Average       = 0;
+            m_shaderGraphVideo.Average  = 0;
+            m_shaderGraphTexture.Average   = 0;
+            m_shaderGraphMesh.Average       = 0;
 
-            m_shaderGraphAllocated.UpdateAverage();
-            m_shaderGraphReserved.UpdateAverage();
-            m_shaderGraphMono.UpdateAverage();
+            m_shaderGraphVideo.UpdateAverage();
+            m_shaderGraphTexture.UpdateAverage();
+            m_shaderGraphMesh.UpdateAverage();
         }
 
         #endregion
@@ -253,13 +253,13 @@ namespace Tayx.Graphy.Dev
 
 			m_devMonitor = GetComponent<G_DevMonitor>();
             
-            m_shaderGraphAllocated  = new G_GraphShader();
-            m_shaderGraphReserved   = new G_GraphShader();
-            m_shaderGraphMono       = new G_GraphShader();
+            m_shaderGraphVideo  = new G_GraphShader();
+            m_shaderGraphTexture   = new G_GraphShader();
+            m_shaderGraphMesh       = new G_GraphShader();
 
-            m_shaderGraphAllocated  .Image = m_imageAllocated;
-            m_shaderGraphReserved   .Image = m_imageReserved;
-            m_shaderGraphMono       .Image = m_imageMono;
+            m_shaderGraphVideo  .Image = m_imageVideo;
+            m_shaderGraphTexture   .Image = m_imageTexture;
+            m_shaderGraphMesh       .Image = m_imageMeshes;
             
             UpdateParameters();
 
