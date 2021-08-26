@@ -46,6 +46,8 @@ namespace Tayx.Graphy.Dev
 		private G_DevMonitor m_devMonitor = null;
 
         private                     int             m_resolution                = 150;
+        private                     int             m_allocsResolution                = 150;
+	
 
         private                     G_GraphShader   m_shaderGraphVideo = null;
         private                     G_GraphShader   m_shaderGraphTexture = null;
@@ -125,8 +127,9 @@ namespace Tayx.Graphy.Dev
 			m_shaderGraphAllocs.InitializeShader();
 
 			m_resolution = m_graphyManager.DevGraphResolution;
-            
-            CreatePoints();
+			m_allocsResolution = m_graphyManager.DevAllocsResolution;
+
+			CreatePoints();
         }
 
         #endregion
@@ -192,9 +195,9 @@ namespace Tayx.Graphy.Dev
             int currentMaxAllocs = 0;
 
 
-			for (int i = 0; i <= m_resolution - 1; i++)
+			for (int i = 0; i <= m_allocsResolution - 1; i++)
             {
-                if (i >= m_resolution - 1)
+                if (i >= m_allocsResolution - 1)
                 {
                     m_allocsArray[i] = allocsKB;
                 }
@@ -219,11 +222,11 @@ namespace Tayx.Graphy.Dev
 
             if (m_shaderGraphAllocs.ShaderArrayValues == null)
             {
-                m_allocsArray                  = new int[m_resolution];
-                m_shaderGraphAllocs.ShaderArrayValues         = new float[m_resolution];
+                m_allocsArray                  = new int[m_allocsResolution];
+                m_shaderGraphAllocs.ShaderArrayValues         = new float[m_allocsResolution];
             }
 
-            for (int i = 0; i <= m_resolution - 1; i++)
+            for (int i = 0; i <= m_allocsResolution - 1; i++)
             {
                 m_shaderGraphAllocs.ShaderArrayValues[i]      = m_allocsArray[i] / (float) m_highestAlloc;
             }
@@ -247,19 +250,29 @@ namespace Tayx.Graphy.Dev
                 m_videoArray                = new float[m_resolution];
                 m_textureArray                 = new float[m_resolution];
                 m_meshArray                     = new float[m_resolution];
-				m_allocsArray                   = new int[m_resolution];
 
                 m_shaderGraphVideo.ShaderArrayValues    = new float[m_resolution];
                 m_shaderGraphTexture.ShaderArrayValues     = new float[m_resolution];
                 m_shaderGraphMesh.ShaderArrayValues         = new float[m_resolution];
-				m_shaderGraphAllocs.ShaderArrayValues         = new float[m_resolution];
             }
+
+            if (m_shaderGraphAllocs.ShaderArrayValues == null || m_shaderGraphAllocs.ShaderArrayValues.Length != m_allocsResolution)
+            {
+				m_allocsArray                   = new int[m_allocsResolution];
+
+				m_shaderGraphAllocs.ShaderArrayValues         = new float[m_allocsResolution];
+            }
+
 
             for (int i = 0; i < m_resolution; i++)
             {
                 m_shaderGraphVideo.ShaderArrayValues[i] = 0;
                 m_shaderGraphTexture.ShaderArrayValues[i]  = 0;
                 m_shaderGraphMesh.ShaderArrayValues[i]      = 0;
+            }
+
+			for (int i = 0; i < m_allocsResolution; i++)
+            {
 				m_shaderGraphAllocs.ShaderArrayValues[i]      = 0;
             }
 
@@ -285,6 +298,7 @@ namespace Tayx.Graphy.Dev
             
             m_shaderGraphMesh.UpdateColors();
 
+			// do colors swap for correct display
 			m_shaderGraphAllocs.GoodColor = m_graphyManager.CriticalAllocsColor;
 			m_shaderGraphAllocs.CautionColor = m_graphyManager.CautionAllocsColor;
 			m_shaderGraphAllocs.CriticalColor = m_graphyManager.GoodAllocsColor;

@@ -225,6 +225,9 @@ namespace Tayx.Graphy
 		[Range(1, 200)]
 		[SerializeField] private int m_devTextUpdateRate = 3;  // 3 updates per sec.
 
+		[Range(10, 300)]
+		[SerializeField] private int m_devAllocsResolution = 150;
+
 		// Audio -------------------------------------------------------------------------
 
 		[SerializeField] private ModuleState m_audioModuleState = ModuleState.FULL;
@@ -411,6 +414,12 @@ namespace Tayx.Graphy
 		{
 			get { return m_devGraphResolution; }
 			set { m_devGraphResolution = value; m_devManager.UpdateParameters(); }
+		}
+
+		public int DevAllocsResolution
+		{
+			get { return m_devAllocsResolution; }
+			set { m_devAllocsResolution = value; m_devManager.UpdateParameters(); }
 		}
 
 		public int DevTextUpdateRate

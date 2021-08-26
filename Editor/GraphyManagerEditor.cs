@@ -128,6 +128,8 @@ namespace Tayx.Graphy
 
         private SerializedProperty m_goodAllocsColor;
 
+		private SerializedProperty m_devAllocsResolution;
+
         #endregion
 
         #region Section -> Audio
@@ -255,11 +257,13 @@ namespace Tayx.Graphy
 
             m_goodAllocsColor = serObj.FindProperty("m_goodAllocsColor");
 
-            #endregion
+			m_devAllocsResolution = serObj.FindProperty("m_devAllocsResolution");
 
-            #region Section -> Audio
+			#endregion
 
-            m_findAudioListenerInCameraIfNull = serObj.FindProperty("m_findAudioListenerInCameraIfNull");
+			#region Section -> Audio
+
+			m_findAudioListenerInCameraIfNull = serObj.FindProperty("m_findAudioListenerInCameraIfNull");
 
             m_audioListener = serObj.FindProperty("m_audioListener");
 
@@ -605,7 +609,7 @@ namespace Tayx.Graphy
 
                 EditorGUI.indentLevel--;
 
-                if (m_fpsModuleState.intValue == 0)
+                //if (m_fpsModuleState.intValue == (int)GraphyManager.ModuleState.FULL)
                 {
                     m_fpsGraphResolution.intValue = EditorGUILayout.IntSlider
                     (
@@ -686,7 +690,7 @@ namespace Tayx.Graphy
 
                 EditorGUI.indentLevel--;
 
-                if (m_ramModuleState.intValue == 0)
+                //if (m_ramModuleState.intValue == (int)GraphyManager.ModuleState.FULL)
                 {
                     m_ramGraphResolution.intValue = EditorGUILayout.IntSlider(
                         new GUIContent
@@ -755,7 +759,7 @@ namespace Tayx.Graphy
 
                 EditorGUI.indentLevel--;
 
-                if (m_devModuleState.intValue == 0)
+                //if (m_devModuleState.intValue == (int)GraphyManager.ModuleState.FULL)
                 {
                     m_devGraphResolution.intValue = EditorGUILayout.IntSlider(
                         new GUIContent
@@ -854,6 +858,21 @@ namespace Tayx.Graphy
 			EditorGUILayout.EndHorizontal();
 
 
+             //if (m_devModuleState.intValue == (int)GraphyManager.ModuleState.FULL)
+                {
+                    m_devAllocsResolution.intValue = EditorGUILayout.IntSlider(
+                        new GUIContent
+                        (
+                            text: "Graph resolution",
+                            tooltip: "Defines the amount of points are in the graph"
+                        ),
+                        m_devAllocsResolution.intValue,
+                        leftValue: 20,
+                        rightValue: m_graphyMode.intValue == 0 ? 300 : 128
+                    );
+                }
+
+
             #endregion
 
             GUILayout.Space(20);
@@ -903,7 +922,7 @@ namespace Tayx.Graphy
                     )
                 );
 
-                if (m_audioModuleState.intValue == 0)
+                //if (m_audioModuleState.intValue == (int)GraphyManager.ModuleState.FULL)
                 {
                     m_audioGraphColor.colorValue = EditorGUILayout.ColorField
                     (
