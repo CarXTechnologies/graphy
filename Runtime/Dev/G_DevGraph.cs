@@ -212,7 +212,7 @@ namespace Tayx.Graphy.Dev
 
                 if (currentMaxAllocs < cur)
                 {
-                    currentMaxAllocs = cur;
+                    currentMaxAllocs = Mathf.Min(cur, m_graphyManager.CriticalAllocsThresholdKB * 5); // range of max graph value for quality view
                 }
             }
 
