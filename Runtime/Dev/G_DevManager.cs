@@ -25,6 +25,7 @@ namespace Tayx.Graphy.Dev
 		#region Variables -> Serialized Private
 
 		[SerializeField] private GameObject m_devGraphGameObject = null;
+		[SerializeField] private GameObject m_allocGraphGameObject = null;
 
 		[SerializeField] private List<Image> m_backgroundImages = new List<Image>();
 
@@ -222,6 +223,7 @@ namespace Tayx.Graphy.Dev
 		{
 			m_devGraph.enabled = active;
 			m_devGraphGameObject.SetActive(active);
+			m_allocGraphGameObject.SetActive(active);
 		}
 
 		#endregion

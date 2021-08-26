@@ -109,7 +109,6 @@ namespace Tayx.Graphy
 
         private SerializedProperty m_devModuleState;
 
-        private SerializedProperty m_allocationDevColor;
 		private SerializedProperty m_videoDevColor;
 		private SerializedProperty m_texturesDevColor;
 		private SerializedProperty m_meshesDevColor;
@@ -120,6 +119,14 @@ namespace Tayx.Graphy
         private SerializedProperty m_devGraphResolution;
 
         private SerializedProperty m_devTextUpdateRate;
+
+		private SerializedProperty m_criticalAllocsColor;
+        private SerializedProperty m_criticalAllocsThreshold;
+
+        private SerializedProperty m_cautionAllocsColor;
+        private SerializedProperty m_cautionAllocsThreshold;
+
+        private SerializedProperty m_goodAllocsColor;
 
         #endregion
 
@@ -228,7 +235,6 @@ namespace Tayx.Graphy
 
             m_devModuleState = serObj.FindProperty("m_devModuleState");
 
-            m_allocationDevColor = serObj.FindProperty("m_allocationDevColor");
             m_videoDevColor = serObj.FindProperty("m_videoDevColor");
             m_texturesDevColor = serObj.FindProperty("m_texturesDevColor");
             m_meshesDevColor = serObj.FindProperty("m_meshesDevColor");
@@ -239,6 +245,15 @@ namespace Tayx.Graphy
             m_devGraphResolution = serObj.FindProperty("m_devGraphResolution");
 
             m_devTextUpdateRate = serObj.FindProperty("m_devTextUpdateRate");
+
+
+			m_criticalAllocsColor = serObj.FindProperty("m_criticalAllocsColor");
+            m_criticalAllocsThreshold = serObj.FindProperty("m_criticalAllocsThresholdKB");
+
+            m_cautionAllocsColor = serObj.FindProperty("m_cautionAllocsColor");
+            m_cautionAllocsThreshold = serObj.FindProperty("m_cautionAllocsThresholdKB");
+
+            m_goodAllocsColor = serObj.FindProperty("m_goodAllocsColor");
 
             #endregion
 
@@ -575,14 +590,13 @@ namespace Tayx.Graphy
 
                 EditorGUILayout.BeginHorizontal();
 
-                EditorGUILayout.IntField
+                EditorGUILayout.LabelField
                 (
                     new GUIContent
                     (
                         text: "- Critical",
                         tooltip: "When FPS falls below the Caution value, this color will be used. (You can't have negative FPS, so this value is just for reference, it can't be changed)."
-                    ),
-                    value: 0
+                    )
                 );
 
                 m_criticalFpsColor.colorValue = EditorGUILayout.ColorField(m_criticalFpsColor.colorValue);
@@ -732,7 +746,6 @@ namespace Tayx.Graphy
 
                 EditorGUI.indentLevel++;
 
-				DrawColor(m_allocationDevColor, "- AllocCount");
 				DrawColor(m_videoDevColor, "- Video");
 				DrawColor(m_texturesDevColor, "- Textures");
 				DrawColor(m_meshesDevColor, "- Meshes");
@@ -768,6 +781,78 @@ namespace Tayx.Graphy
                     rightValue: 60
                 );
             }
+
+			GUILayout.Space(5);
+
+			EditorGUILayout.LabelField("Allocs thresholds (Kb) and colors:");
+
+			EditorGUI.indentLevel++;
+
+			EditorGUILayout.BeginHorizontal();
+
+			m_criticalAllocsThreshold.intValue = EditorGUILayout.IntField
+			(
+				new GUIContent
+				(
+					text: "- Critical",
+					tooltip: "When Allocs rise above this value, this color will be used."
+				),
+				value: m_criticalAllocsThreshold.intValue
+			);
+
+			m_criticalAllocsColor.colorValue = EditorGUILayout.ColorField(m_criticalAllocsColor.colorValue);
+
+			EditorGUILayout.EndHorizontal();
+
+			if (m_criticalAllocsThreshold.intValue <= m_cautionAllocsThreshold.intValue && m_criticalAllocsThreshold.intValue > 1)
+			{
+				m_cautionAllocsThreshold.intValue = m_criticalAllocsThreshold.intValue - 1;
+			}
+			else if (m_criticalAllocsThreshold.intValue <= 1)
+			{
+				m_criticalAllocsThreshold.intValue = 2;
+			}
+
+			EditorGUILayout.BeginHorizontal();
+
+			m_cautionAllocsThreshold.intValue = EditorGUILayout.IntField
+			(
+				new GUIContent
+				(
+					text: "- Caution",
+					tooltip: "When Allocs falls between this and the Good value, this color will be used."
+				),
+				value: m_cautionAllocsThreshold.intValue
+			);
+
+			m_cautionAllocsColor.colorValue = EditorGUILayout.ColorField(m_cautionAllocsColor.colorValue);
+
+			EditorGUILayout.EndHorizontal();
+
+			if (m_cautionAllocsThreshold.intValue >= m_criticalAllocsThreshold.intValue)
+			{
+				m_cautionAllocsThreshold.intValue = m_criticalAllocsThreshold.intValue - 1;
+			}
+			else if (m_cautionAllocsThreshold.intValue <= 0)
+			{
+				m_cautionAllocsThreshold.intValue = 1;
+			}
+
+			EditorGUILayout.BeginHorizontal();
+
+			EditorGUILayout.LabelField
+			(
+				new GUIContent
+				(
+					text: "- Good",
+					tooltip: "When Allocs falls below the Caution value, this color will be used. (You can't have negative FPS, so this value is just for reference, it can't be changed)."
+				)
+			);
+
+			m_goodAllocsColor.colorValue = EditorGUILayout.ColorField(m_goodAllocsColor.colorValue);
+
+			EditorGUILayout.EndHorizontal();
+
 
             #endregion
 

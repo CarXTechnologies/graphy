@@ -102,7 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_graphyMode: 0
   m_enableOnStartup: 1
-  m_keepAlive: 1
+  m_keepAlive: 0
   m_background: 1
   m_backgroundColor: {r: 0, g: 0, b: 0, a: 0.33333334}
   m_enableHotkeys: 1
@@ -113,7 +113,7 @@ MonoBehaviour:
   m_toggleActiveCtrl: 1
   m_toggleActiveAlt: 0
   m_graphModulePosition: 0
-  m_fpsModuleState: 0
+  m_fpsModuleState: 1
   m_goodFpsColor: {r: 0.20825918, g: 0.6792453, b: 0.62190783, a: 1}
   m_goodFpsThreshold: 60
   m_cautionFpsColor: {r: 0.9137255, g: 0.76862746, b: 0.41568628, a: 1}
@@ -127,18 +127,22 @@ MonoBehaviour:
   m_monoRamColor: {r: 0, g: 0.73333335, b: 0.9764706, a: 1}
   m_ramGraphResolution: 150
   m_ramTextUpdateRate: 3
-  m_devModuleState: 0
-  m_allocationDevColor: {r: 1, g: 0.74509805, b: 0.23529412, a: 1}
+  m_devModuleState: 1
   m_videoDevColor: {r: 0.8980392, g: 0.32941177, b: 0.36026022, a: 1}
-  m_texturesDevColor: {r: 1, g: 0.65, b: 1, a: 1}
+  m_texturesDevColor: {r: 0.9716981, g: 0.5271004, b: 0.86224, a: 1}
   m_meshesDevColor: {r: 0.35, g: 0.6, b: 1, a: 1}
-  m_materialsDevColor: {r: 0.63, g: 0.25, b: 0.1, a: 1}
+  m_materialsDevColor: {r: 0.34082413, g: 0.6509434, b: 0.60533124, a: 1}
   m_assetsDevColor: {r: 0.23, g: 0.5, b: 1, a: 1}
   m_objectsDevColor: {r: 0.63, g: 0.3, b: 0.1, a: 1}
+  m_criticalAllocsColor: {r: 0.8627451, g: 0.16078432, b: 0.11764706, a: 1}
+  m_criticalAllocsThresholdKB: 50
+  m_cautionAllocsColor: {r: 0.9529412, g: 0.9098039, b: 0, a: 1}
+  m_cautionAllocsThresholdKB: 30
+  m_goodAllocsColor: {r: 0.4627451, g: 0.83137256, b: 0.22745098, a: 1}
   m_devGraphResolution: 150
   m_devTextUpdateRate: 3
   m_audioModuleState: 0
-  m_findAudioListenerInCameraIfNull: 1
+  m_findAudioListenerInCameraIfNull: 2
   m_audioListener: {fileID: 0}
   m_audioGraphColor: {r: 1, g: 1, b: 1, a: 1}
   m_audioGraphResolution: 81

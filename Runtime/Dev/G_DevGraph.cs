@@ -235,8 +235,8 @@ namespace Tayx.Graphy.Dev
             m_shaderGraphAllocs.Average           = m_devMonitor.AverageAllocs / m_highestAlloc;
             m_shaderGraphAllocs.UpdateAverage();
 
-            m_shaderGraphAllocs.GoodThreshold     = (float)m_graphyManager.CautionAllocsThresholdKB / m_highestAlloc;
-            m_shaderGraphAllocs.CautionThreshold  = (float)m_graphyManager.GoodAllocsThresholdKB / m_highestAlloc;
+            m_shaderGraphAllocs.GoodThreshold     = (float)m_graphyManager.CriticalAllocsThresholdKB / m_highestAlloc;
+            m_shaderGraphAllocs.CautionThreshold  = (float)m_graphyManager.CautionAllocsThresholdKB / m_highestAlloc;
             m_shaderGraphAllocs.UpdateThresholds();
 		}
 
