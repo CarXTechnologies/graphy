@@ -130,7 +130,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -39.600037, y: -3.1999893}
+  m_AnchoredPosition: {x: -39.600037, y: -3.199997}
   m_SizeDelta: {x: 164, y: 44}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &824167088385072061
@@ -378,7 +378,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 158.2998, y: -3.2000198}
+  m_AnchoredPosition: {x: 158.2998, y: -3.2000275}
   m_SizeDelta: {x: 164, y: 44}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &824167088385056483
@@ -763,8 +763,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -106.355}
-  m_SizeDelta: {x: 0, y: 212.711}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &604806503773544451
 CanvasRenderer:
@@ -839,7 +839,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 117.5, y: -3.2000198}
+  m_AnchoredPosition: {x: 117.5, y: -3.2000275}
   m_SizeDelta: {x: 164, y: 44}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &604806492276916485
@@ -933,8 +933,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -13.4417}
-  m_SizeDelta: {x: 0, y: 26.9834}
+  m_AnchoredPosition: {x: 0, y: 92.591}
+  m_SizeDelta: {x: 0, y: -185.175}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &604806490922407105
 CanvasRenderer:
@@ -2209,7 +2209,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 128.90698, y: -3.2000198}
+  m_AnchoredPosition: {x: 128.90698, y: -3.2000275}
   m_SizeDelta: {x: 77.134, y: 44}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &6786261894218043778

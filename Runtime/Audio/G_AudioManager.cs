@@ -28,6 +28,8 @@ namespace Tayx.Graphy.Audio
 
         [SerializeField] private    List<Image>                 m_backgroundImages      = new List<Image>();
 
+		public System.Collections.ObjectModel.ReadOnlyCollection<Image> BackgroundImages => m_backgroundImages.AsReadOnly();
+
         #endregion
 
         #region Variables -> Private

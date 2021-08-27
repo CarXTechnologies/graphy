@@ -20,6 +20,8 @@ using Tayx.Graphy.Dev;
 using Tayx.Graphy.Utils;
 using Tayx.Graphy.Advanced;
 using Tayx.Graphy.Utils.NumString;
+using System.Collections.ObjectModel;
+using UnityEngine.UI;
 
 #if GRAPHY_NEW_INPUT
 using UnityEngine.InputSystem;
@@ -305,10 +307,8 @@ namespace Tayx.Graphy
             set
             {
                 m_graphModulePosition = value;
-                m_fpsManager    .SetPosition(m_graphModulePosition);
-                m_ramManager    .SetPosition(m_graphModulePosition);
-                m_audioManager  .SetPosition(m_graphModulePosition);
-            }
+				UpdateGraphModulePosition();
+			}
         }
 
         // Fps ---------------------------------------------------------------------------
@@ -576,12 +576,7 @@ namespace Tayx.Graphy
                 case ModuleType.AUDIO:
 				case ModuleType.DEV:
                     m_graphModulePosition = modulePosition;
-
-                    m_ramManager.SetPosition(modulePosition);
-					m_devManager.SetPosition(modulePosition);
-                    m_fpsManager.SetPosition(modulePosition);
-                    m_audioManager.SetPosition(modulePosition);
-					m_devManager.SetPosition(modulePosition);
+					UpdateGraphModulePosition();
 					break;
 
                 case ModuleType.ADVANCED:
@@ -639,6 +634,8 @@ namespace Tayx.Graphy
 			m_devManager.SetState(GetStateFromPreset(modulePreset, Shift.DEV));
 			m_audioManager.SetState(GetStateFromPreset(modulePreset, Shift.AUDIO));
 			m_advancedData.SetState(GetStateFromPreset(modulePreset, Shift.ADVANCED));
+
+			ArrangeActiveModules();
         }
 
 		public void ToggleActive()
@@ -710,12 +707,6 @@ namespace Tayx.Graphy
 			m_audioManager  = GetComponentInChildren(typeof(G_AudioManager),  true) as G_AudioManager;
             m_advancedData  = GetComponentInChildren(typeof(G_AdvancedData),  true) as G_AdvancedData;
 
-            m_fpsManager    .SetPosition(m_graphModulePosition);
-            m_ramManager    .SetPosition(m_graphModulePosition);
-			m_devManager    .SetPosition(m_graphModulePosition);
-			m_audioManager  .SetPosition(m_graphModulePosition);
-            m_advancedData  .SetPosition(m_advancedModulePosition);
-
             if (!m_enableOnStartup)
             {
                 ToggleActive();
@@ -730,10 +721,75 @@ namespace Tayx.Graphy
 			}
 			SetPreset(modulePresets[0]); // set first state
 
+			UpdateGraphModulePosition();
+			m_advancedData  .SetPosition(m_advancedModulePosition);
+
+			ArrangeActiveModules();
+
             m_initialized = true;
         }
 
-        private void CheckForHotkeyPresses()
+		private void UpdateGraphModulePosition()
+		{
+            m_fpsManager    .SetPosition(m_graphModulePosition);
+            m_ramManager    .SetPosition(m_graphModulePosition);
+			m_devManager    .SetPosition(m_graphModulePosition);
+			m_audioManager  .SetPosition(m_graphModulePosition);
+		}
+
+		private void ArrangeActiveModules()
+		{
+			float nextY = 0;
+            ArrangeVertical(m_fpsManager.GetComponent<RectTransform>(), m_fpsManager.BackgroundImages, ref nextY);
+			ArrangeVertical(m_ramManager.GetComponent<RectTransform>(), m_ramManager.BackgroundImages, ref nextY);
+			ArrangeVertical(m_devManager.GetComponent<RectTransform>(), m_devManager.BackgroundImages, ref nextY);
+			ArrangeVertical(m_audioManager.GetComponent<RectTransform>(), m_audioManager.BackgroundImages, ref nextY);
+		}
+
+		private void ArrangeVertical(RectTransform rectTransform, ReadOnlyCollection<Image> backgroundImages, ref float nextY)
+		{
+			Image activeBG = null;
+			foreach (Image image in backgroundImages)
+			{
+				if (image.isActiveAndEnabled)
+				{
+					activeBG = image;
+					break;
+				}
+			}
+			if (activeBG == null)
+			{
+				return;
+			}
+
+			bool top = m_graphModulePosition == ModulePosition.TOP_LEFT || m_graphModulePosition == ModulePosition.TOP_RIGHT;
+			bool bottom = m_graphModulePosition == ModulePosition.BOTTOM_LEFT || m_graphModulePosition == ModulePosition.BOTTOM_RIGHT;
+
+			if (!top && !bottom)
+			{
+				return;
+			}
+
+			float dir = top ? -1 : 1;
+
+			var anchoredPosition = rectTransform.anchoredPosition;
+			
+			const float OFFSET = 8f;
+
+			float bgHeight = activeBG.rectTransform.rect.height;
+			float needY = OFFSET + nextY;
+
+			anchoredPosition.y = dir * (needY + rectTransform.sizeDelta.y * rectTransform.pivot.y);
+			if (bottom)
+			{
+				anchoredPosition.y -= rectTransform.rect.height - bgHeight;
+			}
+
+			rectTransform.anchoredPosition = anchoredPosition;
+			nextY = needY + bgHeight;
+		}
+
+		private void CheckForHotkeyPresses()
         {
 #if GRAPHY_NEW_INPUT
             // Toggle Mode ---------------------------------------
