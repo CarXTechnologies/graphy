@@ -450,7 +450,13 @@ namespace Tayx.Graphy
                 new GUIContent("Message type")
             );
 
-            EditorGUILayout.PropertyField(Message);
+            EditorGUILayout.PropertyField(Message, 
+				new GUIContent
+					(
+						text:       "Message   (supported {0})",
+						tooltip:    "Use {0} for current triggered value."
+					)
+				);
 
             TakeScreenshot.boolValue = EditorGUILayout.Toggle
             (
@@ -543,7 +549,18 @@ namespace Tayx.Graphy
                 case GraphyDebugger.DebugVariable.Ram_Mono:
                     return "Ram Mono";
 
-                case GraphyDebugger.DebugVariable.Audio_DB:
+				case GraphyDebugger.DebugVariable.Dev_VideoMem:
+				case GraphyDebugger.DebugVariable.Dev_TexturesMem:
+				case GraphyDebugger.DebugVariable.Dev_MeshesMem:
+				case GraphyDebugger.DebugVariable.Dev_MaterialsMem:
+				case GraphyDebugger.DebugVariable.Dev_Assets:
+				case GraphyDebugger.DebugVariable.Dev_Objects:
+				case GraphyDebugger.DebugVariable.Dev_AllocsCount:
+				case GraphyDebugger.DebugVariable.Dev_Allocs:
+				case GraphyDebugger.DebugVariable.Dev_Allocs_Avg:
+					return debugVariable.ToString().Replace('_', ' ');
+
+				case GraphyDebugger.DebugVariable.Audio_DB:
                     return "Audio DB";
 
                 default:

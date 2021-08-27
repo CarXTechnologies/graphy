@@ -23,6 +23,7 @@ using Tayx.Graphy.Audio;
 using Tayx.Graphy.Fps;
 using Tayx.Graphy.Ram;
 using Tayx.Graphy.Utils;
+using Tayx.Graphy.Dev;
 
 namespace Tayx.Graphy
 {
@@ -51,6 +52,15 @@ namespace Tayx.Graphy
             Ram_Allocated,
             Ram_Reserved,
             Ram_Mono,
+			Dev_VideoMem,
+			Dev_TexturesMem,
+			Dev_MeshesMem,
+			Dev_MaterialsMem,
+			Dev_Assets,
+			Dev_Objects,
+			Dev_AllocsCount,
+			Dev_Allocs,
+			Dev_Allocs_Avg,
             Audio_DB
         }
 
@@ -170,7 +180,8 @@ namespace Tayx.Graphy
 
         private                     G_FpsMonitor          m_fpsMonitor = null;
         private                     G_RamMonitor          m_ramMonitor = null;
-        private                     G_AudioMonitor        m_audioMonitor = null;
+        private                     G_DevMonitor          m_devMonitor = null;
+		private                     G_AudioMonitor        m_audioMonitor = null;
 
         #endregion
 
@@ -180,6 +191,7 @@ namespace Tayx.Graphy
         {
             m_fpsMonitor    = GetComponentInChildren<G_FpsMonitor>();
             m_ramMonitor    = GetComponentInChildren<G_RamMonitor>();
+			m_devMonitor    = GetComponentInChildren<G_DevMonitor>();
             m_audioMonitor  = GetComponentInChildren<G_AudioMonitor>();
         }
 
@@ -407,17 +419,19 @@ namespace Tayx.Graphy
                             case ConditionEvaluation.All_conditions_must_be_met:
                                 int count = 0;
 
-                                foreach (var packetDebugCondition in packet.DebugConditions)
+								float lastValue = 0;
+								foreach (var packetDebugCondition in packet.DebugConditions)
                                 {
                                     if (CheckIfConditionIsMet(packetDebugCondition))
                                     {
-                                        count++;
+										lastValue = m_lastValue;
+										count++;
                                     }
                                 }
 
                                 if (count >= packet.DebugConditions.Count)
                                 {
-                                    ExecuteOperationsInDebugPacket(packet);
+                                    ExecuteOperationsInDebugPacket(packet, lastValue);
 
                                     if (packet.ExecuteOnce)
                                     {
@@ -432,7 +446,7 @@ namespace Tayx.Graphy
                                 {
                                     if (CheckIfConditionIsMet(packetDebugCondition))
                                     {
-                                        ExecuteOperationsInDebugPacket(packet);
+                                        ExecuteOperationsInDebugPacket(packet, m_lastValue);
 
                                         if (packet.ExecuteOnce)
                                         {
@@ -477,45 +491,89 @@ namespace Tayx.Graphy
             }
         }
 
-        /// <summary>
-        /// Obtains the requested value from the specified variable.
-        /// </summary>
-        /// <param name="debugVariable"></param>
-        /// <returns></returns>
-        private float GetRequestedValueFromDebugVariable(DebugVariable debugVariable)
-        {
-            switch (debugVariable)
-            {
-                case DebugVariable.Fps:
-                    return m_fpsMonitor != null     ? m_fpsMonitor.CurrentFPS   : 0;
-                case DebugVariable.Fps_Min:
-                    return m_fpsMonitor != null     ? m_fpsMonitor.OnePercentFPS       : 0;
-                case DebugVariable.Fps_Max:
-                    return m_fpsMonitor != null     ? m_fpsMonitor.Zero1PercentFps       : 0;
-                case DebugVariable.Fps_Avg:
-                    return m_fpsMonitor != null     ? m_fpsMonitor.AverageFPS   : 0;
+		/// <summary>
+		/// Obtains the requested value from the specified variable.
+		/// </summary>
+		/// <param name="debugVariable"></param>
+		/// <returns></returns>
+		private float GetRequestedValueFromDebugVariable(DebugVariable debugVariable)
+		{
+			m_lastValue = DoGetRequestedValueFromDebugVariable(debugVariable);
+			return m_lastValue;
+		}
 
-                case DebugVariable.Ram_Allocated:
-                    return m_ramMonitor != null     ? m_ramMonitor.AllocatedRam : 0;
-                case DebugVariable.Ram_Reserved:
-                    return m_ramMonitor != null     ? m_ramMonitor.AllocatedRam : 0;
-                case DebugVariable.Ram_Mono:
-                    return m_ramMonitor != null     ? m_ramMonitor.AllocatedRam : 0;
+		private float m_lastValue;
 
-                case DebugVariable.Audio_DB:
-                    return m_audioMonitor != null   ? m_audioMonitor.MaxDB      : 0;
+		private float DoGetRequestedValueFromDebugVariable(DebugVariable debugVariable)
+		{
+			if (m_fpsMonitor != null)
+			{
+				switch (debugVariable)
+				{
+					case DebugVariable.Fps:
+						return m_fpsMonitor.CurrentFPS;
+					case DebugVariable.Fps_Min:
+						return m_fpsMonitor.OnePercentFPS;
+					case DebugVariable.Fps_Max:
+						return m_fpsMonitor.Zero1PercentFps;
+					case DebugVariable.Fps_Avg:
+						return m_fpsMonitor.AverageFPS;
+				}
+			}
 
-                default:
-                    return 0;
+			if (m_ramMonitor != null)
+			{
+				switch (debugVariable)
+				{
+					case DebugVariable.Ram_Allocated:
+						return m_ramMonitor.AllocatedRam;
+					case DebugVariable.Ram_Reserved:
+						return m_ramMonitor.AllocatedRam;
+					case DebugVariable.Ram_Mono:
+						return m_ramMonitor.AllocatedRam;
+				}
+			}
 
-            }
-        }
+			if (m_devMonitor != null)
+			{
+				const int toKB = 1024;
+				const int toMB = 1024 * 1024;
+				switch (debugVariable)
+				{
+					case GraphyDebugger.DebugVariable.Dev_VideoMem:
+						return m_devMonitor.VideoMemory / toMB;
+					case GraphyDebugger.DebugVariable.Dev_TexturesMem:
+					return m_devMonitor.TextureMemory / toMB;
+					case GraphyDebugger.DebugVariable.Dev_MeshesMem:
+						return m_devMonitor.MeshMemory / toMB;
+					case GraphyDebugger.DebugVariable.Dev_MaterialsMem:
+						return m_devMonitor.VideoMemory / toKB;
+					case GraphyDebugger.DebugVariable.Dev_Assets:
+						return m_devMonitor.AssetsCount;
+					case GraphyDebugger.DebugVariable.Dev_Objects:
+						return m_devMonitor.ObjectCount;
+					case GraphyDebugger.DebugVariable.Dev_AllocsCount:
+						return m_devMonitor.AllocatedInFrameCount;
+					case GraphyDebugger.DebugVariable.Dev_Allocs:
+						return m_devMonitor.AllocatedInFrameMemory / toKB;
+					case GraphyDebugger.DebugVariable.Dev_Allocs_Avg:
+						return m_devMonitor.AverageAllocs / toKB;
+				}
+			}
+
+			if (debugVariable == DebugVariable.Audio_DB)
+			{
+				return m_audioMonitor != null ? m_audioMonitor.MaxDB : 0;
+			}
+			
+			return 0;
+		}
 
         /// <summary>
         /// Executes the operations in the DebugPacket specified.
         /// </summary>
         /// <param name="debugPacket"></param>
-        private void ExecuteOperationsInDebugPacket(DebugPacket debugPacket)
+        private void ExecuteOperationsInDebugPacket(DebugPacket debugPacket, float value)
         {
             if (debugPacket != null)
             {
@@ -531,13 +589,13 @@ namespace Tayx.Graphy
                     switch (debugPacket.MessageType)
                     {
                         case MessageType.Log:
-                            Debug.Log(message);
+                            Debug.Log(string.Format(message, value));
                             break;
                         case MessageType.Warning:
-                            Debug.LogWarning(message);
+                            Debug.LogWarning(string.Format(message, value));
                             break;
                         case MessageType.Error:
-                            Debug.LogError(message);
+                            Debug.LogError(string.Format(message, value));
                             break;
                     }
                 }

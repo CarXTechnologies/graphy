@@ -89,10 +89,14 @@ namespace Tayx.Graphy.Dev
         #region Methods -> Public
 
         public void UpdateParameters()
-        { 
-			m_updateRate = m_graphyManager.DevTextUpdateRate;
+        {
 
-            if (    m_shaderGraphVideo  == null
+			if (m_graphyManager != null)
+			{
+				m_updateRate = m_graphyManager.DevTextUpdateRate;
+			}
+
+			if (    m_shaderGraphVideo  == null
                 ||  m_shaderGraphTexture   == null
                 ||  m_shaderGraphMesh       == null
 				||  m_shaderGraphAllocs     == null)
