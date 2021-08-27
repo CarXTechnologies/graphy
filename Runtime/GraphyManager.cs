@@ -105,7 +105,7 @@ namespace Tayx.Graphy
 			// 2 bits
 			DEV_TEXT = ModuleState.TEXT << Shift.DEV,
 			DEV_FULL = ModuleState.FULL << Shift.DEV,
-			DEC_BACKGROUND = ModuleState.BACKGROUND << Shift.DEV,
+			DEV_BACKGROUND = ModuleState.BACKGROUND << Shift.DEV,
 
 			// 2 bits
 			AUDIO_TEXT = ModuleState.TEXT << Shift.AUDIO,
