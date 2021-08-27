@@ -1,11 +1,11 @@
 ﻿/* ---------------------------------------
- * Author:          Martin Pane (martintayx@gmail.com) (@tayx94)
+ * Author:          Michael Pizik (m.pizik@carx-tech.com) (@MihaPro)
  * Contributors:    https://github.com/Tayx94/graphy/graphs/contributors
  * Project:         Graphy - Ultimate Stats Monitor
- * Date:            03-Jan-18
- * Studio:          Tayx
+ * Date:            27-Aug-21
+ * Studio:          CarX Technologies
  *
- * Git repo:        https://github.com/Tayx94/graphy
+ * Git repo:        https://github.com/CarXTechnologies/graphy.git
  *
  * This project is released under the MIT license.
  * Attribution is not required, but it is always welcomed!
