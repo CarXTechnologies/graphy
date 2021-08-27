@@ -44,6 +44,7 @@ namespace Tayx.Graphy
         #region Section -> Settings
 
         private SerializedProperty m_graphyMode;
+		private SerializedProperty m_modulePresets;
 
         private SerializedProperty m_enableOnStartup;
 
@@ -108,7 +109,6 @@ namespace Tayx.Graphy
         private bool m_devModuleInspectorToggle = true;
 
         private SerializedProperty m_devModuleState;
-
 		private SerializedProperty m_videoDevColor;
 		private SerializedProperty m_texturesDevColor;
 		private SerializedProperty m_meshesDevColor;
@@ -177,6 +177,7 @@ namespace Tayx.Graphy
             #region Section -> Settings
 
             m_graphyMode = serObj.FindProperty("m_graphyMode");
+			m_modulePresets = serObj.FindProperty("m_modulePresets");
 
             m_enableOnStartup = serObj.FindProperty("m_enableOnStartup");
 
@@ -352,6 +353,20 @@ namespace Tayx.Graphy
                     tooltip: "LIGHT mode increases compatibility with mobile and older, less powerful GPUs, but reduces the maximum graph resolutions to 128."
                 )
             );
+            EditorGUILayout.PropertyField
+            (
+                m_modulePresets,
+                new GUIContent
+                (
+                    text: "Modules Presets (0 - init preset)",
+                    tooltip: "Array of modules presets. Starting from [0]"
+                )
+            );
+
+			if (GUILayout.Button("Reset Modules Presets"))
+			{
+				m_target.ResetModulePresetsToDefaults();
+			}
 
             GUILayout.Space(10);
 

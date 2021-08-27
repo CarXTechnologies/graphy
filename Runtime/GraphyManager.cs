@@ -80,10 +80,10 @@ namespace Tayx.Graphy
 		internal enum Shift : int
 		{
 			FPS             = 0,
-            RAM             = 2,
-			DEV             = 4,
-            AUDIO           = 6,
-			ADVANCED = 8,
+            RAM             = 3,
+			DEV             = 6,
+            AUDIO           = 9,
+			ADVANCED = 12,
 		}
 
 		[Flags]
@@ -92,51 +92,60 @@ namespace Tayx.Graphy
 			FPS_BASIC = ModuleState.BASIC << Shift.FPS,
 			FPS_TEXT = ModuleState.TEXT << Shift.FPS,
 			FPS_FULL = ModuleState.FULL << Shift.FPS,
+			FPS_BACKGROUND = ModuleState.BACKGROUND << Shift.FPS,
 
 			RAM_TEXT = ModuleState.TEXT << Shift.RAM,
 			RAM_FULL = ModuleState.FULL << Shift.RAM,
+			RAM_BACKGROUND = ModuleState.BACKGROUND << Shift.RAM,
 
 			// 2 bits
 			DEV_TEXT = ModuleState.TEXT << Shift.DEV,
 			DEV_FULL = ModuleState.FULL << Shift.DEV,
+			DEC_BACKGROUND = ModuleState.BACKGROUND << Shift.DEV,
 
 			// 2 bits
 			AUDIO_TEXT = ModuleState.TEXT << Shift.AUDIO,
 			AUDIO_FULL = ModuleState.FULL << Shift.AUDIO,
+			AUDIO_BACKGROUND = ModuleState.BACKGROUND << Shift.AUDIO,
 
 			// 2 bits
 			ADVANCED_FULL = ModuleState.FULL << Shift.ADVANCED,
 		}
 
-		private ModuleStateFlags[] m_modulePresets = new ModuleStateFlags[]
+		public ModuleStateFlags[] m_modulePresets;
+
+		public void ResetModulePresetsToDefaults()
 		{
-			ModuleStateFlags.FPS_BASIC,
-			ModuleStateFlags.FPS_TEXT,
-			ModuleStateFlags.FPS_FULL,
+			m_modulePresets = new ModuleStateFlags[]
+			{
+				ModuleStateFlags.FPS_BASIC,
+				ModuleStateFlags.FPS_TEXT,
+				ModuleStateFlags.FPS_FULL,
 
-			ModuleStateFlags.FPS_TEXT | ModuleStateFlags.RAM_TEXT,
-			ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_TEXT,
-			ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_FULL,
+				ModuleStateFlags.FPS_TEXT | ModuleStateFlags.RAM_TEXT,
+				ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_TEXT,
+				ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_FULL,
 
-			ModuleStateFlags.FPS_TEXT | ModuleStateFlags.RAM_TEXT | ModuleStateFlags.DEV_TEXT,
-			ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_TEXT | ModuleStateFlags.DEV_TEXT,
-			ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_FULL | ModuleStateFlags.DEV_TEXT,
-			ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_FULL | ModuleStateFlags.DEV_FULL,
+				ModuleStateFlags.FPS_TEXT | ModuleStateFlags.RAM_TEXT | ModuleStateFlags.DEV_TEXT,
+				ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_TEXT | ModuleStateFlags.DEV_TEXT,
+				ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_FULL | ModuleStateFlags.DEV_TEXT,
+				ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_FULL | ModuleStateFlags.DEV_FULL,
 
-			ModuleStateFlags.FPS_TEXT | ModuleStateFlags.RAM_TEXT | ModuleStateFlags.AUDIO_TEXT,
-			ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_TEXT | ModuleStateFlags.AUDIO_TEXT,
-			ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_FULL | ModuleStateFlags.AUDIO_TEXT,
-			ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_FULL | ModuleStateFlags.AUDIO_FULL,
+				ModuleStateFlags.FPS_TEXT | ModuleStateFlags.RAM_TEXT | ModuleStateFlags.AUDIO_TEXT,
+				ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_TEXT | ModuleStateFlags.AUDIO_TEXT,
+				ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_FULL | ModuleStateFlags.AUDIO_TEXT,
+				ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_FULL | ModuleStateFlags.AUDIO_FULL,
 
-			ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_FULL | ModuleStateFlags.AUDIO_FULL | ModuleStateFlags.ADVANCED_FULL,
-			ModuleStateFlags.FPS_BASIC | ModuleStateFlags.ADVANCED_FULL
-		};
+				ModuleStateFlags.FPS_FULL | ModuleStateFlags.RAM_FULL | ModuleStateFlags.AUDIO_FULL | ModuleStateFlags.ADVANCED_FULL,
+				ModuleStateFlags.FPS_BASIC | ModuleStateFlags.ADVANCED_FULL
+			};
+		}
 
-        #endregion
+		#endregion
 
-        #region Variables -> Serialized Private
+		#region Variables -> Serialized Private
 
-        [SerializeField] private    Mode                    m_graphyMode                        = Mode.FULL;
+		[SerializeField] private    Mode                    m_graphyMode                        = Mode.FULL;
 
         [SerializeField] private    bool                    m_enableOnStartup                   = true;
 
@@ -720,11 +729,11 @@ namespace Tayx.Graphy
 			m_audioManager  .SetPosition(m_graphModulePosition);
             m_advancedData  .SetPosition(m_advancedModulePosition);
 
-            m_fpsManager    .SetState   (m_fpsModuleState);
-            m_ramManager    .SetState   (m_ramModuleState);
-			m_devManager    .SetState   (m_devModuleState);
-            m_audioManager  .SetState   (m_audioModuleState);
-            m_advancedData  .SetState   (m_advancedModuleState);
+            // m_fpsManager    .SetState   (m_fpsModuleState);
+            // m_ramManager    .SetState   (m_ramModuleState);
+			// m_devManager    .SetState   (m_devModuleState);
+            // m_audioManager  .SetState   (m_audioModuleState);
+            // m_advancedData  .SetState   (m_advancedModuleState);
 
             if (!m_enableOnStartup)
             {
@@ -733,6 +742,12 @@ namespace Tayx.Graphy
                 // We need to enable this on startup because we disable it in GraphyManagerEditor
                 GetComponent<Canvas>().enabled = true;
             }
+
+			if (m_modulePresets.Length == 0)
+			{
+				ResetModulePresetsToDefaults();
+			}
+			SetPreset(m_modulePresets[0]); // set first state
 
             m_initialized = true;
         }
