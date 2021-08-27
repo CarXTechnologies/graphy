@@ -57,8 +57,8 @@ namespace Tayx.Graphy
             OFF             = 0,
             FULL            = 1,
             TEXT            = 2,
-            BASIC           = 3,
-            BACKGROUND      = 4
+            BASIC           = 4,
+            BACKGROUND      = 8
         }
 
         public enum ModulePosition
@@ -77,13 +77,15 @@ namespace Tayx.Graphy
             NEVER
         }
 
-		internal enum Shift : int
+		public enum Shift : int
 		{
 			FPS             = 0,
-            RAM             = 3,
-			DEV             = 6,
-            AUDIO           = 9,
-			ADVANCED = 12,
+            RAM             = 4,
+			DEV             = 8,
+            AUDIO           = 12,
+			ADVANCED = 16,
+
+			_MASK = 15
 		}
 
 		[Flags]
@@ -112,11 +114,11 @@ namespace Tayx.Graphy
 			ADVANCED_FULL = ModuleState.FULL << Shift.ADVANCED,
 		}
 
-		public ModuleStateFlags[] m_modulePresets;
+		public ModuleStateFlags[] modulePresets;
 
 		public void ResetModulePresetsToDefaults()
 		{
-			m_modulePresets = new ModuleStateFlags[]
+			modulePresets = new ModuleStateFlags[]
 			{
 				ModuleStateFlags.FPS_BASIC,
 				ModuleStateFlags.FPS_TEXT,
@@ -176,8 +178,6 @@ namespace Tayx.Graphy
         
         // Fps ---------------------------------------------------------------------------
 
-        [SerializeField] private    ModuleState             m_fpsModuleState                    = ModuleState.FULL;
-
         [SerializeField] private    Color                   m_goodFpsColor                      = new Color32(118, 212, 58, 255);
         [SerializeField] private    int                     m_goodFpsThreshold                  = 60;
 
@@ -193,8 +193,6 @@ namespace Tayx.Graphy
         [SerializeField] private    int                     m_fpsTextUpdateRate                 = 3;  // 3 updates per sec.
 
         // Ram ---------------------------------------------------------------------------
-
-        [SerializeField] private    ModuleState             m_ramModuleState                    = ModuleState.FULL;
 
         [SerializeField] private    Color                   m_allocatedRamColor                 = new Color32(255, 190, 60, 255);
         [SerializeField] private    Color                   m_reservedRamColor                  = new Color32(205, 84, 229, 255);
@@ -262,8 +260,6 @@ namespace Tayx.Graphy
 
         [SerializeField] private    ModulePosition          m_advancedModulePosition            = ModulePosition.BOTTOM_LEFT;
 
-        [SerializeField] private    ModuleState             m_advancedModuleState               = ModuleState.FULL;
-
         #endregion
 
         #region Variables -> Private
@@ -319,9 +315,6 @@ namespace Tayx.Graphy
 
         // Setters & Getters
 
-        public ModuleState FpsModuleState               { get { return m_fpsModuleState; }             
-                                                          set { m_fpsModuleState = value; m_fpsManager.SetState(m_fpsModuleState); } }
-
         public Color GoodFPSColor                       { get { return m_goodFpsColor; } 
                                                           set { m_goodFpsColor = value; m_fpsManager.UpdateParameters(); } }
         public Color CautionFPSColor                    { get { return m_cautionFpsColor; } 
@@ -350,10 +343,6 @@ namespace Tayx.Graphy
         // Ram ---------------------------------------------------------------------------
 
         // Setters & Getters
-
-        public ModuleState RamModuleState               { get { return m_ramModuleState; } 
-                                                          set { m_ramModuleState = value; m_ramManager.SetState(m_ramModuleState); } }
-
 
         public Color AllocatedRamColor                  { get { return m_allocatedRamColor; } 
                                                           set { m_allocatedRamColor = value; m_ramManager.UpdateParameters(); } }
@@ -521,9 +510,7 @@ namespace Tayx.Graphy
 
         // Setters & Getters
 
-        public ModuleState AdvancedModuleState          { get { return m_advancedModuleState; } 
-                                                          set { m_advancedModuleState = value; m_advancedData.SetState(m_advancedModuleState); } }
-        
+      
         public ModulePosition AdvancedModulePosition    { get { return m_advancedModulePosition; } 
                                                           set { m_advancedModulePosition = value; m_advancedData.SetPosition(m_advancedModulePosition); } }
 
@@ -632,17 +619,17 @@ namespace Tayx.Graphy
         public void ToggleModes()
         {
 			m_modulePresetIndex++;
-			if (m_modulePresetIndex >= m_modulePresets.Length)
+			if (m_modulePresetIndex >= modulePresets.Length)
             {
                 m_modulePresetIndex = 0;
             }
 
-            SetPreset(m_modulePresets[m_modulePresetIndex]);
+            SetPreset(modulePresets[m_modulePresetIndex]);
         }
 
 		private ModuleState GetStateFromPreset(ModuleStateFlags preset, Shift shift)
 		{
-			return (ModuleState)(((int)preset >> (int)shift) & 3);
+			return (ModuleState)(((int)preset >> (int)shift) & (int)Shift._MASK);
 		}
 
 		public void SetPreset(ModuleStateFlags modulePreset)
@@ -729,12 +716,6 @@ namespace Tayx.Graphy
 			m_audioManager  .SetPosition(m_graphModulePosition);
             m_advancedData  .SetPosition(m_advancedModulePosition);
 
-            // m_fpsManager    .SetState   (m_fpsModuleState);
-            // m_ramManager    .SetState   (m_ramModuleState);
-			// m_devManager    .SetState   (m_devModuleState);
-            // m_audioManager  .SetState   (m_audioModuleState);
-            // m_advancedData  .SetState   (m_advancedModuleState);
-
             if (!m_enableOnStartup)
             {
                 ToggleActive();
@@ -743,11 +724,11 @@ namespace Tayx.Graphy
                 GetComponent<Canvas>().enabled = true;
             }
 
-			if (m_modulePresets.Length == 0)
+			if (modulePresets.Length == 0)
 			{
 				ResetModulePresetsToDefaults();
 			}
-			SetPreset(m_modulePresets[0]); // set first state
+			SetPreset(modulePresets[0]); // set first state
 
             m_initialized = true;
         }

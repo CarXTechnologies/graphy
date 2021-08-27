@@ -237,7 +237,6 @@ namespace Tayx.Graphy.Advanced
             }
             
             SetPosition(m_graphyManager.AdvancedModulePosition);
-            SetState(m_graphyManager.AdvancedModuleState);
         }
 
         public void RefreshParameters()

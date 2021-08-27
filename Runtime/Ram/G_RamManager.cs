@@ -187,8 +187,6 @@ namespace Tayx.Graphy.Ram
             
             m_ramGraph  .UpdateParameters();
             m_ramText   .UpdateParameters();
-            
-            SetState(m_graphyManager.RamModuleState);
         }
 
         public void RefreshParameters()

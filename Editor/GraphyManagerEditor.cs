@@ -72,8 +72,6 @@ namespace Tayx.Graphy
 
         private bool m_fpsModuleInspectorToggle = true;
 
-        private SerializedProperty m_fpsModuleState;
-
         private SerializedProperty m_goodFpsColor;
         private SerializedProperty m_goodFpsThreshold;
 
@@ -92,8 +90,6 @@ namespace Tayx.Graphy
 
         private bool m_ramModuleInspectorToggle = true;
 
-        private SerializedProperty m_ramModuleState;
-
         private SerializedProperty m_allocatedRamColor;
         private SerializedProperty m_reservedRamColor;
         private SerializedProperty m_monoRamColor;
@@ -108,7 +104,6 @@ namespace Tayx.Graphy
 
         private bool m_devModuleInspectorToggle = true;
 
-        private SerializedProperty m_devModuleState;
 		private SerializedProperty m_videoDevColor;
 		private SerializedProperty m_texturesDevColor;
 		private SerializedProperty m_meshesDevColor;
@@ -140,7 +135,6 @@ namespace Tayx.Graphy
 
         private SerializedProperty m_audioListener;
 
-        private SerializedProperty m_audioModuleState;
 
         private SerializedProperty m_audioGraphColor;
 
@@ -160,7 +154,6 @@ namespace Tayx.Graphy
 
         private SerializedProperty m_advancedModulePosition;
 
-        private SerializedProperty m_advancedModuleState;
 
         #endregion
 
@@ -177,7 +170,7 @@ namespace Tayx.Graphy
             #region Section -> Settings
 
             m_graphyMode = serObj.FindProperty("m_graphyMode");
-			m_modulePresets = serObj.FindProperty("m_modulePresets");
+			m_modulePresets = serObj.FindProperty("modulePresets");
 
             m_enableOnStartup = serObj.FindProperty("m_enableOnStartup");
 
@@ -204,8 +197,6 @@ namespace Tayx.Graphy
 
             #region Section -> FPS
 
-            m_fpsModuleState = serObj.FindProperty("m_fpsModuleState");
-
             m_goodFpsColor = serObj.FindProperty("m_goodFpsColor");
             m_goodFpsThreshold = serObj.FindProperty("m_goodFpsThreshold");
 
@@ -222,8 +213,6 @@ namespace Tayx.Graphy
 
             #region Section -> RAM
 
-            m_ramModuleState = serObj.FindProperty("m_ramModuleState");
-
             m_allocatedRamColor = serObj.FindProperty("m_allocatedRamColor");
             m_reservedRamColor = serObj.FindProperty("m_reservedRamColor");
             m_monoRamColor = serObj.FindProperty("m_monoRamColor");
@@ -235,8 +224,6 @@ namespace Tayx.Graphy
             #endregion
 
             #region Section -> DEV
-
-            m_devModuleState = serObj.FindProperty("m_devModuleState");
 
             m_videoDevColor = serObj.FindProperty("m_videoDevColor");
             m_texturesDevColor = serObj.FindProperty("m_texturesDevColor");
@@ -268,7 +255,6 @@ namespace Tayx.Graphy
 
             m_audioListener = serObj.FindProperty("m_audioListener");
 
-            m_audioModuleState = serObj.FindProperty("m_audioModuleState");
 
             m_audioGraphColor = serObj.FindProperty("m_audioGraphColor");
 
@@ -285,8 +271,6 @@ namespace Tayx.Graphy
             #region Section -> Advanced Settings
 
             m_advancedModulePosition = serObj.FindProperty("m_advancedModulePosition");
-
-            m_advancedModuleState = serObj.FindProperty("m_advancedModuleState");
 
             #endregion
 
@@ -363,7 +347,7 @@ namespace Tayx.Graphy
                 )
             );
 
-			if (GUILayout.Button("Reset Modules Presets"))
+			if (GUILayout.Button("Reset Modules Presets") || m_target.modulePresets.Length == 0)
 			{
 				m_target.ResetModulePresetsToDefaults();
 			}
@@ -537,21 +521,20 @@ namespace Tayx.Graphy
                 style: GraphyEditorStyle.FoldoutStyle
             );
 
-            GUILayout.Space(5);
+			GUILayout.Space(5);
 
             if (m_fpsModuleInspectorToggle)
             {
-                EditorGUILayout.PropertyField
-                (
-                    m_fpsModuleState,
-                    new GUIContent
+				DrawInitModuleState(
+					 new GUIContent
                     (
-                        text: "Module state",
-                        tooltip: "FULL -> Text + Graph \nTEXT -> Just text \nOFF -> Turned off"
-                    )
-                );
+						text: "Module state",
+						tooltip: "FULL -> Text + Graph \nTEXT -> Just text \nOFF -> Turned off"
+					),
+					GraphyManager.Shift.FPS
+				);
 
-                GUILayout.Space(5);
+				GUILayout.Space(5);
 
                 EditorGUILayout.LabelField("Fps thresholds and colors:");
 
@@ -669,14 +652,14 @@ namespace Tayx.Graphy
 
             if (m_ramModuleInspectorToggle)
             {
-                EditorGUILayout.PropertyField
+                DrawInitModuleState
                 (
-                    m_ramModuleState,
                     new GUIContent
                     (
                         text: "Module state",
                         tooltip: "FULL -> Text + Graph \nTEXT -> Just text \nOFF -> Turned off"
-                    )
+                    ),
+					GraphyManager.Shift.RAM
                 );
 
                 GUILayout.Space(5);
@@ -749,14 +732,14 @@ namespace Tayx.Graphy
 
             if (m_devModuleInspectorToggle)
             {
-                EditorGUILayout.PropertyField
+                DrawInitModuleState
                 (
-                    m_devModuleState,
                     new GUIContent
                     (
                         text: "Module state",
                         tooltip: "FULL -> Text + Graph \nTEXT -> Just text \nOFF -> Turned off"
-                    )
+                    ),
+					GraphyManager.Shift.DEV
                 );
 
                 GUILayout.Space(5);
@@ -905,14 +888,14 @@ namespace Tayx.Graphy
 
             if (m_audioModuleInspectorToggle)
             {
-                EditorGUILayout.PropertyField
+                DrawInitModuleState
                 (
-                    m_audioModuleState,
                     new GUIContent
                     (
                         text: "Module state",
                         tooltip: "FULL -> Text + Graph \nTEXT -> Just text \nOFF -> Turned off"
-                    )
+                    ),
+					GraphyManager.Shift.AUDIO
                 );
 
                 GUILayout.Space(5);
@@ -1038,14 +1021,14 @@ namespace Tayx.Graphy
             {
                 EditorGUILayout.PropertyField(m_advancedModulePosition);
 
-                EditorGUILayout.PropertyField
+                DrawInitModuleState
                 (
-                    m_advancedModuleState,
                     new GUIContent
                     (
                         text: "Module state",
                         tooltip: "FULL -> Text \nOFF -> Turned off"
-                    )
+                    ),
+					GraphyManager.Shift.ADVANCED
                 );
             }
 
@@ -1056,6 +1039,50 @@ namespace Tayx.Graphy
 
             serializedObject.ApplyModifiedProperties();
         }
+
+		private void DrawInitModuleState(GUIContent guiContecnt, GraphyManager.Shift shift)
+		{
+
+			GraphyManager.ModuleState state = GetInitModuleState(shift);
+			EditorGUI.BeginChangeCheck();
+
+			var newState = (GraphyManager.ModuleState)EditorGUILayout.EnumPopup(guiContecnt, state);
+
+			if (newState != state)
+			{
+				SetInitModuleState(newState, shift);
+			}
+		}
+
+		private GraphyManager.ModuleState GetInitModuleState(GraphyManager.Shift shift)
+		{
+			if(m_target.modulePresets.Length == 0)
+			{
+				return GraphyManager.ModuleState.OFF;
+			}
+
+			int state = (int)m_target.modulePresets[0];
+			return (GraphyManager.ModuleState)((state >> (int)shift) & (int)GraphyManager.Shift._MASK);
+		}
+
+		private void SetInitModuleState(GraphyManager.ModuleState moduleState, GraphyManager.Shift shiftBits)
+		{
+			if(m_target.modulePresets.Length == 0)
+			{
+				return;
+			}
+			int state = (int)moduleState;
+			int mask = (int)GraphyManager.Shift._MASK;
+			int shift = (int)shiftBits;
+			int v = (int)m_target.modulePresets[0];
+			// clear old
+			v = v & ~(mask << shift);
+			// OR new
+			v = v | ((state & mask) << shift);
+			m_target.modulePresets[0] = (GraphyManager.ModuleStateFlags)v;
+			EditorUtility.SetDirty(m_target);
+			m_modulePresets.serializedObject.Update();
+		}
 
 		private void DrawColor(SerializedProperty colorProperty, string label)
 		{

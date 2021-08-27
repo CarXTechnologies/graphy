@@ -197,8 +197,6 @@ namespace Tayx.Graphy.Fps
             m_fpsGraph      .UpdateParameters();
             m_fpsMonitor    .UpdateParameters();
             m_fpsText       .UpdateParameters();
-            
-            SetState(m_graphyManager.FpsModuleState);
         }
 
         public void RefreshParameters()
