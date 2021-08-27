@@ -15,6 +15,7 @@ using Tayx.Graphy.Graph;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Tayx.Graphy.Utils.NumString;
 
 #if UNITY_5_5_OR_NEWER
 using UnityEngine.Profiling;
@@ -36,6 +37,8 @@ namespace Tayx.Graphy.Dev
         [SerializeField] private    Shader          ShaderLight = null;
 
         [SerializeField] private    bool            m_isInitialized = false;
+
+		[SerializeField] private    Text            m_averageAllocsText         = null;
 
         #endregion
 
@@ -60,15 +63,26 @@ namespace Tayx.Graphy.Dev
         private                     float           m_highestMemory = 0;
         private                     int[]           m_allocsArray;
 		private                     int             m_highestAlloc;
+		private float m_deltaTime;
+		private float m_updateRate;
 
-        #endregion
+		#endregion
 
-        #region Methods -> Unity Callbacks
+		#region Methods -> Unity Callbacks
 
-        private void Update()
+		private void Update()
         {
             UpdateGraph();
-        }
+
+			m_deltaTime += Time.unscaledDeltaTime;
+			if (m_deltaTime > 1f / m_updateRate)
+			{
+				m_deltaTime                     = 0f;
+				int averageAllocsKB = m_devMonitor.AverageAllocs / 1024;
+				m_averageAllocsText.text = averageAllocsKB.ToStringNonAlloc();
+				m_averageAllocsText.color = m_graphyManager.GetAllocaRelatedColor(averageAllocsKB);
+			}
+		}
 
         #endregion
         
@@ -76,6 +90,8 @@ namespace Tayx.Graphy.Dev
 
         public void UpdateParameters()
         { 
+			m_updateRate = m_graphyManager.DevTextUpdateRate;
+
             if (    m_shaderGraphVideo  == null
                 ||  m_shaderGraphTexture   == null
                 ||  m_shaderGraphMesh       == null
@@ -191,8 +207,9 @@ namespace Tayx.Graphy.Dev
 		private void UpdateAllocsGraph()
 		{
 			int allocsKB = m_devMonitor.AllocatedInFrameMemory / 1024;
+			int averageAllocsKB = m_devMonitor.AverageAllocs / 1024;
 
-            int currentMaxAllocs = 0;
+			int currentMaxAllocs = averageAllocsKB;
 
 
 			for (int i = 0; i <= m_allocsResolution - 1; i++)
@@ -235,7 +252,7 @@ namespace Tayx.Graphy.Dev
 
             m_shaderGraphAllocs.UpdatePoints();
 
-            m_shaderGraphAllocs.Average           = (m_devMonitor.AverageAllocs / 1024) / (float) m_highestAlloc;
+            m_shaderGraphAllocs.Average           = averageAllocsKB / (float) m_highestAlloc;
             m_shaderGraphAllocs.UpdateAverage();
 
             m_shaderGraphAllocs.GoodThreshold     = (float)m_graphyManager.CriticalAllocsThresholdKB / m_highestAlloc;

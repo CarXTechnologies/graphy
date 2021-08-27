@@ -65,7 +65,7 @@ namespace Tayx.Graphy.Dev
             {
 				// update data
 				int allocsKB = m_devMonitor.AllocatedInFrameMemory / BytesInKB;
-				m_allocsMemoryText.text = (allocsKB).ToStringNonAlloc();
+				m_allocsMemoryText.text = allocsKB.ToStringNonAlloc();
 				Color allocColor = m_graphyManager.GetAllocaRelatedColor(allocsKB);
 				m_allocsMemoryText.color = allocColor;
 
