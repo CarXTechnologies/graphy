@@ -204,6 +204,17 @@ namespace Tayx.Graphy
 
         #region Public Methods
 
+		public void ReplaceDebugPackets(List<DebugPacket> newPackets)
+		{
+			if (newPackets == null || newPackets.Count == 0)
+			{
+				m_debugPackets.Clear();
+				return;
+			}
+
+			m_debugPackets = newPackets;
+		}
+
         /// <summary>
         /// Add a new DebugPacket.
         /// </summary>
