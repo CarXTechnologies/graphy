@@ -545,8 +545,11 @@ namespace Tayx.Graphy
 
 				case GraphyDebugger.DebugVariable.Dev_VideoMem:
 				case GraphyDebugger.DebugVariable.Dev_TexturesMem:
+				case GraphyDebugger.DebugVariable.Dev_TexturesCount:
 				case GraphyDebugger.DebugVariable.Dev_MeshesMem:
+				case GraphyDebugger.DebugVariable.Dev_MeshesCount:
 				case GraphyDebugger.DebugVariable.Dev_MaterialsMem:
+				case GraphyDebugger.DebugVariable.Dev_MaterialsCount:
 				case GraphyDebugger.DebugVariable.Dev_Assets:
 				case GraphyDebugger.DebugVariable.Dev_Objects:
 				case GraphyDebugger.DebugVariable.Dev_AllocsCount:

@@ -54,8 +54,11 @@ namespace Tayx.Graphy
             Ram_Mono,
 			Dev_VideoMem,
 			Dev_TexturesMem,
+			Dev_TexturesCount,
 			Dev_MeshesMem,
+			Dev_MeshesCount,
 			Dev_MaterialsMem,
+			Dev_MaterialsCount,
 			Dev_Assets,
 			Dev_Objects,
 			Dev_AllocsCount,
@@ -189,10 +192,10 @@ namespace Tayx.Graphy
 
         private void Start()
         {
-            m_fpsMonitor    = GetComponentInChildren<G_FpsMonitor>();
-            m_ramMonitor    = GetComponentInChildren<G_RamMonitor>();
-			m_devMonitor    = GetComponentInChildren<G_DevMonitor>();
-            m_audioMonitor  = GetComponentInChildren<G_AudioMonitor>();
+            m_fpsMonitor    = GetComponentInChildren<G_FpsMonitor>(true);
+            m_ramMonitor    = GetComponentInChildren<G_RamMonitor>(true);
+			m_devMonitor    = GetComponentInChildren<G_DevMonitor>(true);
+            m_audioMonitor  = GetComponentInChildren<G_AudioMonitor>(true);
         }
 
         private void Update()
@@ -484,18 +487,23 @@ namespace Tayx.Graphy
         /// <returns></returns>
         private bool CheckIfConditionIsMet(DebugCondition debugCondition)
         {
-            switch (debugCondition.Comparer)
+			float value = GetRequestedValueFromDebugVariable(debugCondition.Variable);
+			if (value == INACTIVE_VALUE)
+			{
+				return false;
+			}
+			switch (debugCondition.Comparer)
             {
                 case DebugComparer.Less_than:
-                    return GetRequestedValueFromDebugVariable(debugCondition.Variable) < debugCondition.Value;
+                    return value < debugCondition.Value;
                 case DebugComparer.Equals_or_less_than:
-                    return GetRequestedValueFromDebugVariable(debugCondition.Variable) <= debugCondition.Value;
+                    return value <= debugCondition.Value;
                 case DebugComparer.Equals:
-                    return Mathf.Approximately(GetRequestedValueFromDebugVariable(debugCondition.Variable), debugCondition.Value);
+                    return Mathf.Approximately(value, debugCondition.Value);
                 case DebugComparer.Equals_or_greater_than:
-                    return GetRequestedValueFromDebugVariable(debugCondition.Variable) >= debugCondition.Value;
+                    return value >= debugCondition.Value;
                 case DebugComparer.Greater_than:
-                    return GetRequestedValueFromDebugVariable(debugCondition.Variable) > debugCondition.Value;
+                    return value > debugCondition.Value;
 
                 default:
                     return false;
@@ -509,82 +517,144 @@ namespace Tayx.Graphy
 		/// <returns></returns>
 		private float GetRequestedValueFromDebugVariable(DebugVariable debugVariable)
 		{
-			m_lastValue = DoGetRequestedValueFromDebugVariable(debugVariable);
+			m_lastValue = GetValue(debugVariable);
 			return m_lastValue;
 		}
 
 		private float m_lastValue;
+		public const float INACTIVE_VALUE = float.MinValue;
+		private HashSet<int> m_showedNonActiveWarn = new HashSet<int>();
 
-		private float DoGetRequestedValueFromDebugVariable(DebugVariable debugVariable)
+		public float GetValue(DebugVariable debugVariable)
 		{
-			if (m_fpsMonitor != null)
+			if (IsValueInRange(debugVariable, DebugVariable.Fps, DebugVariable.Fps_Avg))
 			{
-				switch (debugVariable)
+				if (CheckMonitorActiveState(m_fpsMonitor, debugVariable))
 				{
-					case DebugVariable.Fps:
-						return m_fpsMonitor.CurrentFPS;
-					case DebugVariable.Fps_Min:
-						return m_fpsMonitor.OnePercentFPS;
-					case DebugVariable.Fps_Max:
-						return m_fpsMonitor.Zero1PercentFps;
-					case DebugVariable.Fps_Avg:
-						return m_fpsMonitor.AverageFPS;
+					switch (debugVariable)
+					{
+						case DebugVariable.Fps:
+							return m_fpsMonitor.CurrentFPS;
+						case DebugVariable.Fps_Min:
+							return m_fpsMonitor.OnePercentFPS;
+						case DebugVariable.Fps_Max:
+							return m_fpsMonitor.Zero1PercentFps;
+						case DebugVariable.Fps_Avg:
+							return m_fpsMonitor.AverageFPS;
+					}
 				}
+				return INACTIVE_VALUE;
 			}
 
-			if (m_ramMonitor != null)
+			if (IsValueInRange(debugVariable, DebugVariable.Ram_Allocated, DebugVariable.Ram_Mono))
 			{
-				switch (debugVariable)
+				if (CheckMonitorActiveState(m_ramMonitor, debugVariable))
 				{
-					case DebugVariable.Ram_Allocated:
-						return m_ramMonitor.AllocatedRam;
-					case DebugVariable.Ram_Reserved:
-						return m_ramMonitor.AllocatedRam;
-					case DebugVariable.Ram_Mono:
-						return m_ramMonitor.AllocatedRam;
+					switch (debugVariable)
+					{
+						case DebugVariable.Ram_Allocated:
+							return m_ramMonitor.AllocatedRam;
+						case DebugVariable.Ram_Reserved:
+							return m_ramMonitor.AllocatedRam;
+						case DebugVariable.Ram_Mono:
+							return m_ramMonitor.AllocatedRam;
+					}
 				}
+				return INACTIVE_VALUE;
 			}
 
-			if (m_devMonitor != null)
+			if (IsValueInRange(debugVariable, DebugVariable.Dev_VideoMem, DebugVariable.Dev_Allocs_Avg))
 			{
-				const int toKB = 1024;
-				const int toMB = 1024 * 1024;
-				switch (debugVariable)
+				if (CheckMonitorActiveState(m_devMonitor, debugVariable))
 				{
-					case GraphyDebugger.DebugVariable.Dev_VideoMem:
-						return m_devMonitor.VideoMemory / toMB;
-					case GraphyDebugger.DebugVariable.Dev_TexturesMem:
-					return m_devMonitor.TextureMemory / toMB;
-					case GraphyDebugger.DebugVariable.Dev_MeshesMem:
-						return m_devMonitor.MeshMemory / toMB;
-					case GraphyDebugger.DebugVariable.Dev_MaterialsMem:
-						return m_devMonitor.VideoMemory / toKB;
-					case GraphyDebugger.DebugVariable.Dev_Assets:
-						return m_devMonitor.AssetsCount;
-					case GraphyDebugger.DebugVariable.Dev_Objects:
-						return m_devMonitor.ObjectCount;
-					case GraphyDebugger.DebugVariable.Dev_AllocsCount:
-						return m_devMonitor.AllocatedInFrameCount;
-					case GraphyDebugger.DebugVariable.Dev_Allocs:
-						return m_devMonitor.AllocatedInFrameMemory / toKB;
-					case GraphyDebugger.DebugVariable.Dev_Allocs_Avg:
-						return m_devMonitor.AverageAllocs / toKB;
+					const int toKB = 1024;
+					const int toMB = 1024 * 1024;
+					switch (debugVariable)
+					{
+						case GraphyDebugger.DebugVariable.Dev_VideoMem:
+							return m_devMonitor.VideoMemory / toMB;
+						case GraphyDebugger.DebugVariable.Dev_TexturesMem:
+							return m_devMonitor.TextureMemory / toMB;
+						case GraphyDebugger.DebugVariable.Dev_TexturesCount:
+							return m_devMonitor.TextureCount;
+						case GraphyDebugger.DebugVariable.Dev_MeshesMem:
+							return m_devMonitor.MeshMemory / toMB;
+						case GraphyDebugger.DebugVariable.Dev_MeshesCount:
+							return m_devMonitor.MeshCount;
+						case GraphyDebugger.DebugVariable.Dev_MaterialsMem:
+							return m_devMonitor.MaterialMemory / toKB;
+						case GraphyDebugger.DebugVariable.Dev_MaterialsCount:
+							return m_devMonitor.MaterialCount;
+						case GraphyDebugger.DebugVariable.Dev_Assets:
+							return m_devMonitor.AssetsCount;
+						case GraphyDebugger.DebugVariable.Dev_Objects:
+							return m_devMonitor.ObjectCount;
+						case GraphyDebugger.DebugVariable.Dev_AllocsCount:
+							return m_devMonitor.AllocatedInFrameCount;
+						case GraphyDebugger.DebugVariable.Dev_Allocs:
+							return m_devMonitor.AllocatedInFrameMemory / toKB;
+						case GraphyDebugger.DebugVariable.Dev_Allocs_Avg:
+							return m_devMonitor.AverageAllocs / toKB;
+					}
 				}
+				return INACTIVE_VALUE;
 			}
 
-			if (debugVariable == DebugVariable.Audio_DB)
+			if (IsValueInRange(debugVariable, DebugVariable.Audio_DB, DebugVariable.Audio_DB))
 			{
-				return m_audioMonitor != null ? m_audioMonitor.MaxDB : 0;
+				if (CheckMonitorActiveState(m_audioMonitor, debugVariable))
+				{
+					return m_audioMonitor.MaxDB;
+				}
+				return INACTIVE_VALUE;
 			}
-			
-			return 0;
+
+			return INACTIVE_VALUE;
 		}
 
-        /// <summary>
-        /// Executes the operations in the DebugPacket specified.
-        /// </summary>
-        /// <param name="debugPacket"></param>
-        private void ExecuteOperationsInDebugPacket(DebugPacket debugPacket, float value)
+		private bool IsValueInRange(DebugVariable variable, DebugVariable min, DebugVariable max)
+		{
+			if (variable < min || variable > max)
+			{
+				return false;
+			}
+			return true;
+		}
+
+		private bool CheckMonitorActiveState(MonoBehaviour monitor, DebugVariable variable)
+		{
+			if (monitor == null)
+			{
+				return false;
+			}
+
+			if (monitor.gameObject.activeInHierarchy == false)
+			{
+				if (!IsShowedWarn(monitor, variable))
+				{
+					Debug.LogWarning($"[Graphy] Monitor '{monitor.name}' not active now for reading values: '{variable}'. Activate it or set BACKGROUND status.", monitor);
+				}
+				return false;
+			}
+			return true;
+		}
+
+		private bool IsShowedWarn(MonoBehaviour monitor, DebugVariable variable)
+		{
+			var value = monitor.GetHashCode();
+			if (m_showedNonActiveWarn.Contains(value))
+			{
+				return true;
+			}
+			m_showedNonActiveWarn.Add(value);
+			return false;
+		}
+
+		/// <summary>
+		/// Executes the operations in the DebugPacket specified.
+		/// </summary>
+		/// <param name="debugPacket"></param>
+		private void ExecuteOperationsInDebugPacket(DebugPacket debugPacket, float value)
         {
             if (debugPacket != null)
             {
@@ -600,13 +670,13 @@ namespace Tayx.Graphy
                     switch (debugPacket.MessageType)
                     {
                         case MessageType.Log:
-                            Debug.Log(string.Format(message, value));
+                            Debug.Log(string.Format(message, value), this);
                             break;
                         case MessageType.Warning:
-                            Debug.LogWarning(string.Format(message, value));
+                            Debug.LogWarning(string.Format(message, value), this);
                             break;
                         case MessageType.Error:
-                            Debug.LogError(string.Format(message, value));
+                            Debug.LogError(string.Format(message, value), this);
                             break;
                     }
                 }

@@ -29,11 +29,13 @@ namespace Tayx.Graphy.Utils
 
         private static  object  _lock       = new object();
 
-        #endregion
+		#endregion
 
-        #region Properties -> Public
+		#region Properties -> Public
 
-        public static T Instance
+		public static bool IsInstantiated => _instance != null;
+
+		public static T Instance
         {
             get
             {
