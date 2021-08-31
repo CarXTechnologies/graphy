@@ -61,8 +61,8 @@ namespace Tayx.Graphy.Dev
         private                     float[]         m_textureArray;
         private                     float[]         m_meshArray;
         private                     float           m_highestMemory = 0;
-        private                     int[]           m_allocsArray;
-		private                     int             m_highestAlloc;
+        private                     float[]           m_allocsArray;
+		private                     float             m_highestAlloc;
 		private float m_deltaTime;
 		private float m_updateRate;
 
@@ -78,9 +78,8 @@ namespace Tayx.Graphy.Dev
 			if (m_deltaTime > 1f / m_updateRate)
 			{
 				m_deltaTime                     = 0f;
-				int averageAllocsKB = m_devMonitor.AverageAllocs / 1024;
-				m_averageAllocsText.text = averageAllocsKB.ToStringNonAlloc();
-				m_averageAllocsText.color = m_graphyManager.GetAllocaRelatedColor(averageAllocsKB);
+				m_averageAllocsText.text = ((int)m_devMonitor.AverageAllocs).ToStringNonAlloc();
+				m_averageAllocsText.color = m_graphyManager.GetAllocaRelatedColor(m_devMonitor.AverageAllocs);
 			}
 		}
 
@@ -210,10 +209,10 @@ namespace Tayx.Graphy.Dev
 
 		private void UpdateAllocsGraph()
 		{
-			int allocsKB = m_devMonitor.AllocatedInFrameMemory;
-			int averageAllocsKB = m_devMonitor.AverageAllocs;
+			float allocsKB = m_devMonitor.AllocatedInFrameMemory;
+			float averageAllocsKB = m_devMonitor.AverageAllocs;
 
-			int currentMaxAllocs = averageAllocsKB;
+			float currentMaxAllocs = averageAllocsKB;
 
 
 			for (int i = 0; i <= m_allocsResolution - 1; i++)
@@ -227,7 +226,7 @@ namespace Tayx.Graphy.Dev
                     m_allocsArray[i] = m_allocsArray[i + 1];
                 }
 
-				int cur = m_allocsArray[i]; 
+				float cur = m_allocsArray[i]; 
 
                 // Store the highest allocs to use as the highest point in the graph
 
@@ -243,7 +242,7 @@ namespace Tayx.Graphy.Dev
 
             if (m_shaderGraphAllocs.ShaderArrayValues == null)
             {
-                m_allocsArray                  = new int[m_allocsResolution];
+                m_allocsArray                  = new float[m_allocsResolution];
                 m_shaderGraphAllocs.ShaderArrayValues         = new float[m_allocsResolution];
             }
 
@@ -278,7 +277,7 @@ namespace Tayx.Graphy.Dev
 
             if (m_shaderGraphAllocs.ShaderArrayValues == null || m_shaderGraphAllocs.ShaderArrayValues.Length != m_allocsResolution)
             {
-				m_allocsArray                   = new int[m_allocsResolution];
+				m_allocsArray                   = new float[m_allocsResolution];
 
 				m_shaderGraphAllocs.ShaderArrayValues         = new float[m_allocsResolution];
             }

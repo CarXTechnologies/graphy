@@ -61,24 +61,24 @@ namespace Tayx.Graphy.Dev
             if (m_deltaTime > 1f / m_updateRate)
             {
 				// update data
-				int allocsKB = m_devMonitor.AllocatedInFrameMemory;
-				m_allocsMemoryText.text = allocsKB.ToStringNonAlloc();
+				var allocsKB = m_devMonitor.AllocatedInFrameMemory;
+				m_allocsMemoryText.text = ((int)allocsKB).ToStringNonAlloc();
 				Color allocColor = m_graphyManager.GetAllocaRelatedColor(allocsKB);
 				m_allocsMemoryText.color = allocColor;
 
-				m_allocsCountText.text = m_devMonitor.AllocatedInFrameCount.ToStringNonAlloc();
+				m_allocsCountText.text = ((int)m_devMonitor.AllocatedInFrameCount).ToStringNonAlloc();
 				m_allocsCountText.color = allocColor;
 
-				m_videoMemoryText.text = m_devMonitor.VideoMemory.ToStringNonAlloc();
+				m_videoMemoryText.text = ((int)m_devMonitor.VideoMemory).ToStringNonAlloc();
 
 				m_texturesCountText.text = m_devMonitor.TextureCount.ToStringNonAlloc();
-				m_texturesMemoryText.text = m_devMonitor.TextureMemory.ToStringNonAlloc();
+				m_texturesMemoryText.text = ((int)m_devMonitor.TextureMemory).ToStringNonAlloc();
 
 				m_meshesCountText.text = m_devMonitor.MeshCount.ToStringNonAlloc();
-				m_meshesMemoryText.text = m_devMonitor.MeshMemory.ToStringNonAlloc();
+				m_meshesMemoryText.text = ((int)m_devMonitor.MeshMemory).ToStringNonAlloc();
 
 				m_materialsCountText.text = m_devMonitor.MaterialCount.ToStringNonAlloc();
-				m_materialsMemoryText.text = m_devMonitor.MaterialMemory.ToStringNonAlloc();
+				m_materialsMemoryText.text = ((int)m_devMonitor.MaterialMemory).ToStringNonAlloc();
 
 				m_assetsCountText.text = m_devMonitor.AssetsCount.ToStringNonAlloc();
 				m_objectsCountText.text = m_devMonitor.ObjectCount.ToStringNonAlloc();

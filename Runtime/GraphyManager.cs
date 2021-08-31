@@ -551,7 +551,7 @@ namespace Tayx.Graphy
 
         #region Methods -> Public
 
-		public Color GetAllocaRelatedColor(int allocsKB)
+		public Color GetAllocaRelatedColor(float allocsKB)
 		{
             if (allocsKB >= m_criticalAllocsThresholdKB)
             {
