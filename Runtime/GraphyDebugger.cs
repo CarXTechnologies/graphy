@@ -567,22 +567,20 @@ namespace Tayx.Graphy
 			{
 				if (CheckMonitorActiveState(m_devMonitor, debugVariable))
 				{
-					const int toKB = 1024;
-					const int toMB = 1024 * 1024;
 					switch (debugVariable)
 					{
 						case GraphyDebugger.DebugVariable.Dev_VideoMem:
-							return m_devMonitor.VideoMemory / toMB;
+							return m_devMonitor.VideoMemory;
 						case GraphyDebugger.DebugVariable.Dev_TexturesMem:
-							return m_devMonitor.TextureMemory / toMB;
+							return m_devMonitor.TextureMemory;
 						case GraphyDebugger.DebugVariable.Dev_TexturesCount:
 							return m_devMonitor.TextureCount;
 						case GraphyDebugger.DebugVariable.Dev_MeshesMem:
-							return m_devMonitor.MeshMemory / toMB;
+							return m_devMonitor.MeshMemory;
 						case GraphyDebugger.DebugVariable.Dev_MeshesCount:
 							return m_devMonitor.MeshCount;
 						case GraphyDebugger.DebugVariable.Dev_MaterialsMem:
-							return m_devMonitor.MaterialMemory / toKB;
+							return m_devMonitor.MaterialMemory;
 						case GraphyDebugger.DebugVariable.Dev_MaterialsCount:
 							return m_devMonitor.MaterialCount;
 						case GraphyDebugger.DebugVariable.Dev_Assets:
@@ -592,9 +590,9 @@ namespace Tayx.Graphy
 						case GraphyDebugger.DebugVariable.Dev_AllocsCount:
 							return m_devMonitor.AllocatedInFrameCount;
 						case GraphyDebugger.DebugVariable.Dev_Allocs:
-							return m_devMonitor.AllocatedInFrameMemory / toKB;
+							return m_devMonitor.AllocatedInFrameMemory;
 						case GraphyDebugger.DebugVariable.Dev_Allocs_Avg:
-							return m_devMonitor.AverageAllocs / toKB;
+							return m_devMonitor.AverageAllocs;
 					}
 				}
 				return INACTIVE_VALUE;

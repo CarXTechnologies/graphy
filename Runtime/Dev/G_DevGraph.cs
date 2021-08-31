@@ -210,8 +210,8 @@ namespace Tayx.Graphy.Dev
 
 		private void UpdateAllocsGraph()
 		{
-			int allocsKB = m_devMonitor.AllocatedInFrameMemory / 1024;
-			int averageAllocsKB = m_devMonitor.AverageAllocs / 1024;
+			int allocsKB = m_devMonitor.AllocatedInFrameMemory;
+			int averageAllocsKB = m_devMonitor.AverageAllocs;
 
 			int currentMaxAllocs = averageAllocsKB;
 

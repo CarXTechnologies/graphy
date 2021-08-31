@@ -92,10 +92,13 @@ namespace Tayx.Graphy.Dev
 
         private void Update()
         {
+			const int ToKB = 1024;
+			const int ToMB = ToKB * 1024;
+
 			// NEW
 			if (m_allocInFrameMemoryRecorder.Valid)
 			{
-				AllocatedInFrameMemory = (int)m_allocInFrameMemoryRecorder.LastValue;
+				AllocatedInFrameMemory = (int)m_allocInFrameMemoryRecorder.LastValue / ToKB;
 			}
 			if (m_allocInFrameCountRecorder.Valid)
 			{
@@ -103,7 +106,7 @@ namespace Tayx.Graphy.Dev
 			}
 			if (m_textureMemoryRecorder.Valid)
 			{
-				TextureMemory = (int)m_textureMemoryRecorder.LastValue;
+				TextureMemory = (int)m_textureMemoryRecorder.LastValue / ToMB;
 			}
 			if (m_textureCountRecorder.Valid)
 			{
@@ -111,7 +114,7 @@ namespace Tayx.Graphy.Dev
 			}
 			if (m_meshMemoryRecorder.Valid)
 			{
-				MeshMemory = (int)m_meshMemoryRecorder.LastValue;
+				MeshMemory = (int)m_meshMemoryRecorder.LastValue / ToMB;
 			}
 			if (m_meshCountRecorder.Valid)
 			{
@@ -119,7 +122,7 @@ namespace Tayx.Graphy.Dev
 			}
 			if (m_materialMemoryRecorder.Valid)
 			{
-				MaterialMemory = (int)m_materialMemoryRecorder.LastValue;
+				MaterialMemory = (int)m_materialMemoryRecorder.LastValue / ToKB;
 			}
 			if (m_materialCountRecorder.Valid)
 			{
@@ -134,7 +137,7 @@ namespace Tayx.Graphy.Dev
 				ObjectCount = (int)m_objectCountRecorder.LastValue;
 			}
 
-			VideoMemory = (int)Profiler.GetAllocatedMemoryForGraphicsDriver();
+			VideoMemory = (int)Profiler.GetAllocatedMemoryForGraphicsDriver() / ToMB;
 
 
 			m_indexSample++;
