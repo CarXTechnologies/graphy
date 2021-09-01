@@ -29,11 +29,13 @@ namespace Tayx.Graphy.Fps
 
         [SerializeField] private    List<Image>                 m_backgroundImages          = new List<Image>();
 
-        #endregion
+		public System.Collections.ObjectModel.ReadOnlyCollection<Image> BackgroundImages => m_backgroundImages.AsReadOnly();
 
-        #region Variables -> Private
+		#endregion
 
-        private                     GraphyManager               m_graphyManager = null;
+		#region Variables -> Private
+
+		private                     GraphyManager               m_graphyManager = null;
         
         private                     G_FpsGraph                  m_fpsGraph = null;
         private                     G_FpsMonitor                m_fpsMonitor = null;
@@ -45,12 +47,12 @@ namespace Tayx.Graphy.Fps
 
         private                     GraphyManager.ModuleState   m_previousModuleState = GraphyManager.ModuleState.FULL;
         private                     GraphyManager.ModuleState   m_currentModuleState = GraphyManager.ModuleState.FULL;
-        
-        #endregion
 
-        #region Methods -> Unity Callbacks
+		#endregion
 
-        private void Awake()
+		#region Methods -> Unity Callbacks
+
+		private void Awake()
         {
             Init();
         }
@@ -197,8 +199,6 @@ namespace Tayx.Graphy.Fps
             m_fpsGraph      .UpdateParameters();
             m_fpsMonitor    .UpdateParameters();
             m_fpsText       .UpdateParameters();
-            
-            SetState(m_graphyManager.FpsModuleState);
         }
 
         public void RefreshParameters()
@@ -243,7 +243,7 @@ namespace Tayx.Graphy.Fps
             m_fpsGraph.enabled = active;
             m_fpsGraphGameObject.SetActive(active);
         }
-
         #endregion
+
     }
 }

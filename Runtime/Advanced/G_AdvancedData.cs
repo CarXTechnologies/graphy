@@ -31,6 +31,8 @@ namespace Tayx.Graphy.Advanced
 
         [SerializeField] private    List<Image>                 m_backgroundImages = new List<Image>();
 
+		public System.Collections.ObjectModel.ReadOnlyCollection<Image> BackgroundImages => m_backgroundImages.AsReadOnly();
+
         [SerializeField] private    Text                        m_graphicsDeviceVersionText = null;
 
         [SerializeField] private    Text                        m_processorTypeText = null;
@@ -237,7 +239,6 @@ namespace Tayx.Graphy.Advanced
             }
             
             SetPosition(m_graphyManager.AdvancedModulePosition);
-            SetState(m_graphyManager.AdvancedModuleState);
         }
 
         public void RefreshParameters()

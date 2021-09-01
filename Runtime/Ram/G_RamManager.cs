@@ -36,6 +36,8 @@ namespace Tayx.Graphy.Ram
 
         [SerializeField] private    List<Image>             m_backgroundImages          = new List<Image>();
 
+		public System.Collections.ObjectModel.ReadOnlyCollection<Image> BackgroundImages => m_backgroundImages.AsReadOnly();
+
         #endregion
 
         #region Variables -> Private
@@ -187,8 +189,6 @@ namespace Tayx.Graphy.Ram
             
             m_ramGraph  .UpdateParameters();
             m_ramText   .UpdateParameters();
-            
-            SetState(m_graphyManager.RamModuleState);
         }
 
         public void RefreshParameters()

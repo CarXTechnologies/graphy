@@ -44,6 +44,7 @@ namespace Tayx.Graphy
         #region Section -> Settings
 
         private SerializedProperty m_graphyMode;
+		private SerializedProperty m_modulePresets;
 
         private SerializedProperty m_enableOnStartup;
 
@@ -71,8 +72,6 @@ namespace Tayx.Graphy
 
         private bool m_fpsModuleInspectorToggle = true;
 
-        private SerializedProperty m_fpsModuleState;
-
         private SerializedProperty m_goodFpsColor;
         private SerializedProperty m_goodFpsThreshold;
 
@@ -91,8 +90,6 @@ namespace Tayx.Graphy
 
         private bool m_ramModuleInspectorToggle = true;
 
-        private SerializedProperty m_ramModuleState;
-
         private SerializedProperty m_allocatedRamColor;
         private SerializedProperty m_reservedRamColor;
         private SerializedProperty m_monoRamColor;
@@ -100,6 +97,33 @@ namespace Tayx.Graphy
         private SerializedProperty m_ramGraphResolution;
 
         private SerializedProperty m_ramTextUpdateRate;
+
+        #endregion
+
+        #region Section -> DEV
+
+        private bool m_devModuleInspectorToggle = true;
+
+		private SerializedProperty m_videoDevColor;
+		private SerializedProperty m_texturesDevColor;
+		private SerializedProperty m_meshesDevColor;
+		private SerializedProperty m_materialsDevColor;
+		private SerializedProperty m_assetsDevColor;
+		private SerializedProperty m_objectsDevColor;
+
+        private SerializedProperty m_devGraphResolution;
+
+        private SerializedProperty m_devTextUpdateRate;
+
+		private SerializedProperty m_criticalAllocsColor;
+        private SerializedProperty m_criticalAllocsThreshold;
+
+        private SerializedProperty m_cautionAllocsColor;
+        private SerializedProperty m_cautionAllocsThreshold;
+
+        private SerializedProperty m_goodAllocsColor;
+
+		private SerializedProperty m_devAllocsResolution;
 
         #endregion
 
@@ -111,7 +135,6 @@ namespace Tayx.Graphy
 
         private SerializedProperty m_audioListener;
 
-        private SerializedProperty m_audioModuleState;
 
         private SerializedProperty m_audioGraphColor;
 
@@ -131,7 +154,6 @@ namespace Tayx.Graphy
 
         private SerializedProperty m_advancedModulePosition;
 
-        private SerializedProperty m_advancedModuleState;
 
         #endregion
 
@@ -148,6 +170,7 @@ namespace Tayx.Graphy
             #region Section -> Settings
 
             m_graphyMode = serObj.FindProperty("m_graphyMode");
+			m_modulePresets = serObj.FindProperty("modulePresets");
 
             m_enableOnStartup = serObj.FindProperty("m_enableOnStartup");
 
@@ -174,8 +197,6 @@ namespace Tayx.Graphy
 
             #region Section -> FPS
 
-            m_fpsModuleState = serObj.FindProperty("m_fpsModuleState");
-
             m_goodFpsColor = serObj.FindProperty("m_goodFpsColor");
             m_goodFpsThreshold = serObj.FindProperty("m_goodFpsThreshold");
 
@@ -192,8 +213,6 @@ namespace Tayx.Graphy
 
             #region Section -> RAM
 
-            m_ramModuleState = serObj.FindProperty("m_ramModuleState");
-
             m_allocatedRamColor = serObj.FindProperty("m_allocatedRamColor");
             m_reservedRamColor = serObj.FindProperty("m_reservedRamColor");
             m_monoRamColor = serObj.FindProperty("m_monoRamColor");
@@ -204,13 +223,38 @@ namespace Tayx.Graphy
 
             #endregion
 
-            #region Section -> Audio
+            #region Section -> DEV
 
-            m_findAudioListenerInCameraIfNull = serObj.FindProperty("m_findAudioListenerInCameraIfNull");
+            m_videoDevColor = serObj.FindProperty("m_videoDevColor");
+            m_texturesDevColor = serObj.FindProperty("m_texturesDevColor");
+            m_meshesDevColor = serObj.FindProperty("m_meshesDevColor");
+            m_materialsDevColor = serObj.FindProperty("m_materialsDevColor");
+            m_assetsDevColor = serObj.FindProperty("m_assetsDevColor");
+            m_objectsDevColor = serObj.FindProperty("m_objectsDevColor");
+
+            m_devGraphResolution = serObj.FindProperty("m_devGraphResolution");
+
+            m_devTextUpdateRate = serObj.FindProperty("m_devTextUpdateRate");
+
+
+			m_criticalAllocsColor = serObj.FindProperty("m_criticalAllocsColor");
+            m_criticalAllocsThreshold = serObj.FindProperty("m_criticalAllocsThresholdKB");
+
+            m_cautionAllocsColor = serObj.FindProperty("m_cautionAllocsColor");
+            m_cautionAllocsThreshold = serObj.FindProperty("m_cautionAllocsThresholdKB");
+
+            m_goodAllocsColor = serObj.FindProperty("m_goodAllocsColor");
+
+			m_devAllocsResolution = serObj.FindProperty("m_devAllocsResolution");
+
+			#endregion
+
+			#region Section -> Audio
+
+			m_findAudioListenerInCameraIfNull = serObj.FindProperty("m_findAudioListenerInCameraIfNull");
 
             m_audioListener = serObj.FindProperty("m_audioListener");
 
-            m_audioModuleState = serObj.FindProperty("m_audioModuleState");
 
             m_audioGraphColor = serObj.FindProperty("m_audioGraphColor");
 
@@ -227,8 +271,6 @@ namespace Tayx.Graphy
             #region Section -> Advanced Settings
 
             m_advancedModulePosition = serObj.FindProperty("m_advancedModulePosition");
-
-            m_advancedModuleState = serObj.FindProperty("m_advancedModuleState");
 
             #endregion
 
@@ -295,6 +337,21 @@ namespace Tayx.Graphy
                     tooltip: "LIGHT mode increases compatibility with mobile and older, less powerful GPUs, but reduces the maximum graph resolutions to 128."
                 )
             );
+            EditorGUILayout.PropertyField
+            (
+                m_modulePresets,
+                new GUIContent
+                (
+                    text: "Modules Presets (0 - init preset)",
+                    tooltip: "Array of modules presets. Starting from [0]"
+                )
+            );
+
+			if (GUILayout.Button("Reset Modules Presets") || m_target.modulePresets.Length == 0)
+			{
+				m_target.ResetModulePresetsToDefaults();
+				EditorUtility.SetDirty(m_target);
+			}
 
             GUILayout.Space(10);
 
@@ -465,21 +522,20 @@ namespace Tayx.Graphy
                 style: GraphyEditorStyle.FoldoutStyle
             );
 
-            GUILayout.Space(5);
+			GUILayout.Space(5);
 
             if (m_fpsModuleInspectorToggle)
             {
-                EditorGUILayout.PropertyField
-                (
-                    m_fpsModuleState,
-                    new GUIContent
+				DrawInitModuleState(
+					 new GUIContent
                     (
-                        text: "Module state",
-                        tooltip: "FULL -> Text + Graph \nTEXT -> Just text \nOFF -> Turned off"
-                    )
-                );
+						text: "Module state",
+						tooltip: "FULL -> Text + Graph \nTEXT -> Just text \nOFF -> Turned off"
+					),
+					GraphyManager.Shift.FPS
+				);
 
-                GUILayout.Space(5);
+				GUILayout.Space(5);
 
                 EditorGUILayout.LabelField("Fps thresholds and colors:");
 
@@ -537,14 +593,13 @@ namespace Tayx.Graphy
 
                 EditorGUILayout.BeginHorizontal();
 
-                EditorGUILayout.IntField
+                EditorGUILayout.LabelField
                 (
                     new GUIContent
                     (
                         text: "- Critical",
                         tooltip: "When FPS falls below the Caution value, this color will be used. (You can't have negative FPS, so this value is just for reference, it can't be changed)."
-                    ),
-                    value: 0
+                    )
                 );
 
                 m_criticalFpsColor.colorValue = EditorGUILayout.ColorField(m_criticalFpsColor.colorValue);
@@ -553,7 +608,7 @@ namespace Tayx.Graphy
 
                 EditorGUI.indentLevel--;
 
-                if (m_fpsModuleState.intValue == 0)
+                //if (m_fpsModuleState.intValue == (int)GraphyManager.ModuleState.FULL)
                 {
                     m_fpsGraphResolution.intValue = EditorGUILayout.IntSlider
                     (
@@ -598,14 +653,14 @@ namespace Tayx.Graphy
 
             if (m_ramModuleInspectorToggle)
             {
-                EditorGUILayout.PropertyField
+                DrawInitModuleState
                 (
-                    m_ramModuleState,
                     new GUIContent
                     (
                         text: "Module state",
                         tooltip: "FULL -> Text + Graph \nTEXT -> Just text \nOFF -> Turned off"
-                    )
+                    ),
+					GraphyManager.Shift.RAM
                 );
 
                 GUILayout.Space(5);
@@ -634,7 +689,7 @@ namespace Tayx.Graphy
 
                 EditorGUI.indentLevel--;
 
-                if (m_ramModuleState.intValue == 0)
+                //if (m_ramModuleState.intValue == (int)GraphyManager.ModuleState.FULL)
                 {
                     m_ramGraphResolution.intValue = EditorGUILayout.IntSlider(
                         new GUIContent
@@ -665,6 +720,162 @@ namespace Tayx.Graphy
 
             GUILayout.Space(20);
 
+			#region Section -> DEV
+
+            m_devModuleInspectorToggle = EditorGUILayout.Foldout
+            (
+                m_devModuleInspectorToggle,
+                content: " [ DEV ]",
+                style: GraphyEditorStyle.FoldoutStyle
+            );
+
+            GUILayout.Space(5);
+
+            if (m_devModuleInspectorToggle)
+            {
+                DrawInitModuleState
+                (
+                    new GUIContent
+                    (
+                        text: "Module state",
+                        tooltip: "FULL -> Text + Graph \nTEXT -> Just text \nOFF -> Turned off"
+                    ),
+					GraphyManager.Shift.DEV
+                );
+
+                GUILayout.Space(5);
+
+                EditorGUILayout.LabelField("Сolors:");
+
+                EditorGUI.indentLevel++;
+
+				DrawColor(m_videoDevColor, "- Video");
+				DrawColor(m_texturesDevColor, "- Textures");
+				DrawColor(m_meshesDevColor, "- Meshes");
+				DrawColor(m_materialsDevColor, "- Materials");
+				DrawColor(m_assetsDevColor, "- Assets");
+				DrawColor(m_objectsDevColor, "- Objects");
+
+                EditorGUI.indentLevel--;
+
+                //if (m_devModuleState.intValue == (int)GraphyManager.ModuleState.FULL)
+                {
+                    m_devGraphResolution.intValue = EditorGUILayout.IntSlider(
+                        new GUIContent
+                        (
+                            text: "Graph resolution",
+                            tooltip: "Defines the amount of points are in the graph"
+                        ),
+                        m_devGraphResolution.intValue,
+                        leftValue: 20,
+                        rightValue: m_graphyMode.intValue == 0 ? 300 : 128
+                    );
+                }
+
+                m_devTextUpdateRate.intValue = EditorGUILayout.IntSlider
+                (
+                    new GUIContent
+                    (
+                        text: "Text update rate",
+                        tooltip: "Defines the amount times the text is updated in 1 second."
+                    ),
+                    m_devTextUpdateRate.intValue,
+                    leftValue: 1,
+                    rightValue: 60
+                );
+            }
+
+			GUILayout.Space(5);
+
+			EditorGUILayout.LabelField("Allocs thresholds (Kb) and colors:");
+
+			EditorGUI.indentLevel++;
+
+			EditorGUILayout.BeginHorizontal();
+
+			m_criticalAllocsThreshold.intValue = EditorGUILayout.IntField
+			(
+				new GUIContent
+				(
+					text: "- Critical",
+					tooltip: "When Allocs rise above this value, this color will be used."
+				),
+				value: m_criticalAllocsThreshold.intValue
+			);
+
+			m_criticalAllocsColor.colorValue = EditorGUILayout.ColorField(m_criticalAllocsColor.colorValue);
+
+			EditorGUILayout.EndHorizontal();
+
+			if (m_criticalAllocsThreshold.intValue <= m_cautionAllocsThreshold.intValue && m_criticalAllocsThreshold.intValue > 1)
+			{
+				m_cautionAllocsThreshold.intValue = m_criticalAllocsThreshold.intValue - 1;
+			}
+			else if (m_criticalAllocsThreshold.intValue <= 1)
+			{
+				m_criticalAllocsThreshold.intValue = 2;
+			}
+
+			EditorGUILayout.BeginHorizontal();
+
+			m_cautionAllocsThreshold.intValue = EditorGUILayout.IntField
+			(
+				new GUIContent
+				(
+					text: "- Caution",
+					tooltip: "When Allocs falls between this and the Good value, this color will be used."
+				),
+				value: m_cautionAllocsThreshold.intValue
+			);
+
+			m_cautionAllocsColor.colorValue = EditorGUILayout.ColorField(m_cautionAllocsColor.colorValue);
+
+			EditorGUILayout.EndHorizontal();
+
+			if (m_cautionAllocsThreshold.intValue >= m_criticalAllocsThreshold.intValue)
+			{
+				m_cautionAllocsThreshold.intValue = m_criticalAllocsThreshold.intValue - 1;
+			}
+			else if (m_cautionAllocsThreshold.intValue <= 0)
+			{
+				m_cautionAllocsThreshold.intValue = 1;
+			}
+
+			EditorGUILayout.BeginHorizontal();
+
+			EditorGUILayout.LabelField
+			(
+				new GUIContent
+				(
+					text: "- Good",
+					tooltip: "When Allocs falls below the Caution value, this color will be used. (You can't have negative FPS, so this value is just for reference, it can't be changed)."
+				)
+			);
+
+			m_goodAllocsColor.colorValue = EditorGUILayout.ColorField(m_goodAllocsColor.colorValue);
+
+			EditorGUILayout.EndHorizontal();
+
+
+             //if (m_devModuleState.intValue == (int)GraphyManager.ModuleState.FULL)
+                {
+                    m_devAllocsResolution.intValue = EditorGUILayout.IntSlider(
+                        new GUIContent
+                        (
+                            text: "Graph resolution",
+                            tooltip: "Defines the amount of points are in the graph"
+                        ),
+                        m_devAllocsResolution.intValue,
+                        leftValue: 20,
+                        rightValue: m_graphyMode.intValue == 0 ? 300 : 128
+                    );
+                }
+
+
+            #endregion
+
+            GUILayout.Space(20);
+
             #region Section -> Audio
 
             m_audioModuleInspectorToggle = EditorGUILayout.Foldout
@@ -678,14 +889,14 @@ namespace Tayx.Graphy
 
             if (m_audioModuleInspectorToggle)
             {
-                EditorGUILayout.PropertyField
+                DrawInitModuleState
                 (
-                    m_audioModuleState,
                     new GUIContent
                     (
                         text: "Module state",
                         tooltip: "FULL -> Text + Graph \nTEXT -> Just text \nOFF -> Turned off"
-                    )
+                    ),
+					GraphyManager.Shift.AUDIO
                 );
 
                 GUILayout.Space(5);
@@ -710,7 +921,7 @@ namespace Tayx.Graphy
                     )
                 );
 
-                if (m_audioModuleState.intValue == 0)
+                //if (m_audioModuleState.intValue == (int)GraphyManager.ModuleState.FULL)
                 {
                     m_audioGraphColor.colorValue = EditorGUILayout.ColorField
                     (
@@ -811,14 +1022,14 @@ namespace Tayx.Graphy
             {
                 EditorGUILayout.PropertyField(m_advancedModulePosition);
 
-                EditorGUILayout.PropertyField
+                DrawInitModuleState
                 (
-                    m_advancedModuleState,
                     new GUIContent
                     (
                         text: "Module state",
                         tooltip: "FULL -> Text \nOFF -> Turned off"
-                    )
+                    ),
+					GraphyManager.Shift.ADVANCED
                 );
             }
 
@@ -830,10 +1041,63 @@ namespace Tayx.Graphy
             serializedObject.ApplyModifiedProperties();
         }
 
-        #endregion
+		private void DrawInitModuleState(GUIContent guiContecnt, GraphyManager.Shift shift)
+		{
 
-        #region Methods -> Private
+			GraphyManager.ModuleState state = GetInitModuleState(shift);
+			EditorGUI.BeginChangeCheck();
 
-        #endregion
-    }
+			var newState = (GraphyManager.ModuleState)EditorGUILayout.EnumPopup(guiContecnt, state);
+
+			if (newState != state)
+			{
+				SetInitModuleState(newState, shift);
+			}
+		}
+
+		private GraphyManager.ModuleState GetInitModuleState(GraphyManager.Shift shift)
+		{
+			if(m_target.modulePresets.Length == 0)
+			{
+				return GraphyManager.ModuleState.OFF;
+			}
+
+			int state = (int)m_target.modulePresets[0];
+			return (GraphyManager.ModuleState)((state >> (int)shift) & (int)GraphyManager.Shift._MASK);
+		}
+
+		private void SetInitModuleState(GraphyManager.ModuleState moduleState, GraphyManager.Shift shiftBits)
+		{
+			if(m_target.modulePresets.Length == 0)
+			{
+				return;
+			}
+			int state = (int)moduleState;
+			int mask = (int)GraphyManager.Shift._MASK;
+			int shift = (int)shiftBits;
+			int v = (int)m_target.modulePresets[0];
+			// clear old
+			v = v & ~(mask << shift);
+			// OR new
+			v = v | ((state & mask) << shift);
+			m_target.modulePresets[0] = (GraphyManager.ModuleStateFlags)v;
+			EditorUtility.SetDirty(m_target);
+			m_modulePresets.serializedObject.Update();
+		}
+
+		private void DrawColor(SerializedProperty colorProperty, string label)
+		{
+				colorProperty.colorValue = EditorGUILayout.ColorField
+                (
+                    label: label,
+                    value: colorProperty.colorValue
+                );
+		}
+
+		#endregion
+
+		#region Methods -> Private
+
+		#endregion
+	}
 }
