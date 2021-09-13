@@ -209,8 +209,6 @@ namespace Tayx.Graphy
 
 		// Dev ---------------------------------------------------------------------------
 
-		[SerializeField] private ModuleState m_devModuleState = ModuleState.FULL;
-
 		[SerializeField] private Color m_videoDevColor = new Color32(205, 84, 229, 255);
 		[SerializeField] private Color m_texturesDevColor = new Color(1f, 0.65f, 1f, 1);
 		[SerializeField] private Color m_meshesDevColor = new Color(0.35f, 0.6f, 1f, 1);
@@ -239,9 +237,7 @@ namespace Tayx.Graphy
 
 		// Audio -------------------------------------------------------------------------
 
-		[SerializeField] private ModuleState m_audioModuleState = ModuleState.FULL;
-
-        [SerializeField] private    LookForAudioListener    m_findAudioListenerInCameraIfNull   = LookForAudioListener.ON_SCENE_LOAD;
+		[SerializeField] private    LookForAudioListener    m_findAudioListenerInCameraIfNull   = LookForAudioListener.ON_SCENE_LOAD;
 
         [SerializeField] private    AudioListener           m_audioListener                     = null;
         
@@ -367,12 +363,6 @@ namespace Tayx.Graphy
 
 		// Setters & Getters
 
-		public ModuleState DevModuleState
-		{
-			get { return m_devModuleState; }
-			set { m_devModuleState = value; m_devManager.SetState(m_devModuleState); }
-		}
-
 		public Color VideoDevColor
 		{
 			get { return m_videoDevColor; }
@@ -465,13 +455,7 @@ namespace Tayx.Graphy
 
 		// Setters & Getters
 
-		public ModuleState AudioModuleState
-		{
-			get { return m_audioModuleState; }
-			set { m_audioModuleState = value; m_audioManager.SetState(m_audioModuleState); }
-		}
-
-        public AudioListener AudioListener              { get { return m_audioListener; } 
+		public AudioListener AudioListener              { get { return m_audioListener; } 
                                                           set { m_audioListener = value; m_audioManager.UpdateParameters(); } }
         
         public LookForAudioListener 

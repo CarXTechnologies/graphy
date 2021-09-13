@@ -182,8 +182,6 @@ namespace Tayx.Graphy.Dev
 
 			m_devGraph.UpdateParameters();
 			m_devText.UpdateParameters();
-
-			SetState(m_graphyManager.DevModuleState);
 		}
 
 		public void RefreshParameters()

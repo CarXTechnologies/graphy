@@ -184,9 +184,7 @@ namespace Tayx.Graphy.Audio
             
             m_audioGraph    .UpdateParameters();
             m_audioMonitor  .UpdateParameters();
-            m_audioText     .UpdateParameters();
-            
-            SetState(m_graphyManager.AudioModuleState);
+			m_audioText.UpdateParameters();
         }
 
         public void RefreshParameters()
