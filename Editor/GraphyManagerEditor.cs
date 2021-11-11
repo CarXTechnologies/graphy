@@ -347,7 +347,7 @@ namespace Tayx.Graphy
                 )
             );
 
-			if (GUILayout.Button("Reset Modules Presets") || m_target.modulePresets.Length == 0)
+			if (GUILayout.Button("Reset Modules Presets") || m_target.modulePresets?.Length == 0)
 			{
 				m_target.ResetModulePresetsToDefaults();
 				EditorUtility.SetDirty(m_target);
