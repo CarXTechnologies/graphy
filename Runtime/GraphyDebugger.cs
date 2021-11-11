@@ -177,11 +177,14 @@ namespace Tayx.Graphy
 
         [SerializeField] private    List<DebugPacket>   m_debugPackets = new List<DebugPacket>();
 
-        #endregion
+		#endregion
 
-        #region Variables -> Private
+		#region Variables -> Private
 
-        private                     G_FpsMonitor          m_fpsMonitor = null;
+		public string LOGTAG => "[GraphyDebugger]";
+		public ILogger logger = Debug.unityLogger;
+
+		private G_FpsMonitor m_fpsMonitor = null;
         private                     G_RamMonitor          m_ramMonitor = null;
         private                     G_DevMonitor          m_devMonitor = null;
 		private                     G_AudioMonitor        m_audioMonitor = null;
@@ -630,7 +633,7 @@ namespace Tayx.Graphy
 			{
 				if (!IsShowedWarn(monitor, variable))
 				{
-					Debug.LogWarning($"[Graphy] Monitor '{monitor.name}' not active now for reading values: '{variable}'. Activate it or set BACKGROUND status.", monitor);
+					logger?.LogWarning(LOGTAG, $"Monitor '{monitor.name}' not active now for reading values: '{variable}'. Activate it or set BACKGROUND status.", monitor);
 				}
 				return false;
 			}
@@ -663,18 +666,18 @@ namespace Tayx.Graphy
 
                 if (debugPacket.Message != "")
                 {
-                    string message = "[Graphy] (" + System.DateTime.Now + "): " + debugPacket.Message;
+					string message = "(" + System.DateTime.Now + "): " + debugPacket.Message;
 
                     switch (debugPacket.MessageType)
                     {
                         case MessageType.Log:
-                            Debug.Log(string.Format(message, value), this);
+							logger?.Log(LOGTAG, string.Format(message, value), this);
                             break;
                         case MessageType.Warning:
-                            Debug.LogWarning(string.Format(message, value), this);
+							logger?.LogWarning(LOGTAG, string.Format(message, value), this);
                             break;
                         case MessageType.Error:
-                            Debug.LogError(string.Format(message, value), this);
+							logger?.LogError(LOGTAG, string.Format(message, value), this);
                             break;
                     }
                 }
