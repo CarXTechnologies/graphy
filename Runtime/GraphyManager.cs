@@ -297,7 +297,9 @@ namespace Tayx.Graphy
         public Color BackgroundColor                    { get { return m_backgroundColor; } 
                                                           set { m_backgroundColor = value; UpdateAllParameters(); } }
 
-        public ModulePosition GraphModulePosition
+		public bool active => m_active;
+
+		public ModulePosition GraphModulePosition
         {
             get { return m_graphModulePosition; }
             set
